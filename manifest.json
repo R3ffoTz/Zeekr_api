@@ -1,0 +1,9 @@
+{
+  "domain": "zeekr_7x",
+  "name": "Zeekr 7x",
+  "version": "1.0.0",
+  "config_flow": true,
+  "iot_class": "cloud_polling",
+  "brand": true,
+  "codeowners": ["@me"]
+}

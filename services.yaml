@@ -1,0 +1,18 @@
+start_climate:
+  description: "Start de airco"
+  fields:
+    temperature:
+      description: "Doeltemperatuur"
+      example: "20.0"
+    duration:
+      description: "Duur in minuten"
+      example: "15"
+
+stop_climate:
+  description: "Stop de airco"
+
+unlock_doors:
+  description: "Ontgrendel de deuren"
+
+lock_doors:
+  description: "Vergrendel de deuren"
