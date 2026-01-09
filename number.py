@@ -28,7 +28,6 @@ class ZeekrChargeLimit(CoordinatorEntity, NumberEntity):
         self._attr_native_step = 1
         self._attr_native_unit_of_measurement = "%"
         self._attr_icon = "mdi:battery-charging-80"
-        self._attr_mode = "slider"
 
     @property
     def native_value(self):

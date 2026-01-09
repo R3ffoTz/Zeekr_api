@@ -13,8 +13,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
     sensor_definitions = [
         # --- Voertuig Identificatie ---
         ("Software Versie", ["info", "displayOSVersion"], None, "mdi:car-info"),
-        ("Kenteken", ["info", "PlateNo"], None, "mdi:card-account-details"),
-        ("Model", ["info", "vin"], None, "mdi:car-info"),
+        ("Kenteken", ["info", "plateNo"], None, "mdi:card-account-details"),
+        ("Vin", ["info", "vin"], None, "mdi:car-info"),
         
         # --- Batterij & Laden ---
         ("Accu Percentage", ["main", "additionalVehicleStatus", "electricVehicleStatus", "chargeLevel"], PERCENTAGE, SensorDeviceClass.BATTERY),
@@ -23,11 +23,10 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ("Laadspanning", ["qrvs", "chargeVoltage"], "V", "mdi:flash"),
         ("Laadvermogen", ["qrvs", "chargePower"], "kW", SensorDeviceClass.POWER),
         ("Laadtijd Minuten", ["main", "additionalVehicleStatus", "electricVehicleStatus", "timeToFullyCharged"], "min", None),
-        ("Actieradius", ["main", "additionalVehicleStatus", "electricVehicleStatus", "distanceToEmptyOnBatteryOnly"], "km", "mdi:map-marker-distance"),
+        ("Actieradius", ["main", "additionalVehicleStatus", "electricVehicleStatus", "distanceToEmptyOnBatteryOnly"], "km", SensorDeviceClass.DISTANCE),
 
         # --- Laadplanning (Direct uit de API) ---
         ("Geplande Laadtijd", ["plan", "startTime"], None, "mdi:clock-outline"),
-        ("Gepland Laadlimiet", ["plan", "soc"], PERCENTAGE, None),
         
         # --- Banden (Spanning & Temperatuur) ---
         ("Bandenspanning LV", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusDriver"], "bar", SensorDeviceClass.PRESSURE),
@@ -127,6 +126,7 @@ class ZeekrChargingTimeFormattedSensor(CoordinatorEntity, SensorEntity):
     def __init__(self, coordinator, prefix):
         super().__init__(coordinator)
         vin = coordinator.entry.data.get("vin")
+        info = coordinator.data.get("main", {}).get("vehicleBasicInfo", {})
         self.path = ["main", "additionalVehicleStatus", "electricVehicleStatus", "timeToFullyCharged"]
         self._attr_name = f"{prefix} Laadtijd Resterend"
         self._attr_unique_id = f"{coordinator.entry.entry_id}_charging_time_formatted"

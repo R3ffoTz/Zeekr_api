@@ -10,7 +10,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     
     entities = [
         ZeekrChargeTime(coordinator, entry, "start"),
-        ZeekrChargeTime(coordinator, entry, "eind")
+        ZeekrChargeTime(coordinator, entry, "end")
     ]
     for i, dagnaam in enumerate(dagnamen, 1):
         entities.append(ZeekrTravelTime(coordinator, prefix, i, dagnaam, entry.entry_id))
@@ -52,6 +52,7 @@ class ZeekrChargeTime(CoordinatorEntity, TimeEntity):
     def __init__(self, coordinator, entry, time_type):
         super().__init__(coordinator)
         vin = coordinator.entry.data.get('vin')
+        prefix = coordinator.entry.data.get('name', 'Zeekr')
         self.entry = entry
         self.time_type = time_type
         self._attr_name = f"{coordinator.entry.data.get('name', 'Zeekr')} Laadplan {time_type.capitalize()}tijd"
@@ -77,6 +78,6 @@ class ZeekrChargeTime(CoordinatorEntity, TimeEntity):
         new_time = value.strftime("%H:%M")
         plan = self.coordinator.data.get("plan", {})
         start = new_time if self.time_type == "start" else plan.get("startTime", "01:15")
-        end = new_time if self.time_type == "eind" else plan.get("endTime", "06:45")
+        end = new_time if self.time_type == "end" else plan.get("endTime", "06:45")
         payload = {"target": 2, "endTime": end, "timerId": "2", "startTime": start, "command": "start"}
         await self.coordinator.send_command(URL_CHARGE_PLAN, payload, f"Laadplan gewijzigd")
