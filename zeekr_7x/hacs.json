@@ -1,0 +1,6 @@
+{
+  "name": "Zeekr 7X Integration",
+  "render_readme": true,
+  "category": "integration",
+  "homeassistant": "2024.1.0"
+}

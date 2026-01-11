@@ -119,16 +119,17 @@ class ZeekrSensor(CoordinatorEntity, SensorEntity):
                 return int(float(val))
             except (ValueError, TypeError): return val
 
-        return val
         # E. Voertuig Status (Mapping)
         if "Voertuig Status" in self._raw_name:
             mapping = {
                 "engine-off": "Geparkeerd",
-                "driving": "Rijdend",
+                "engine-running": "Rijdend",
                 "ready": "Startklaar",
                 "charging": "Aan het laden"
             }
-            return mapping.get(str(val).lower(), str(val).capitalize())
+            return mapping.get(str(val).strip().lower(), f"Status {val}")
+            
+        return val
 
 class ZeekrChargingTimeFormattedSensor(CoordinatorEntity, SensorEntity):
     """Speciale sensor voor nette weergave van laadtijd."""

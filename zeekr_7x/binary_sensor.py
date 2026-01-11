@@ -13,9 +13,13 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ZeekrBinary(coordinator, p, "Laden", BinarySensorDeviceClass.BATTERY_CHARGING, ["qrvs", "chargerState"], check_val="2"),
         
         # Deuren & Kofferbak
-        ZeekrBinary(coordinator, p, "Kofferbak Open", BinarySensorDeviceClass.DOOR, ["main", "additionalVehicleStatus", "drivingSafetyStatus", "trunkOpenStatus"]),
+        ZeekrBinary(coordinator, p, "Frunk", BinarySensorDeviceClass.DOOR, ["main", "additionalVehicleStatus", "drivingSafetyStatus", "engineHoodOpenStatus"]),
+        ZeekrBinary(coordinator, p, "Kofferbak", BinarySensorDeviceClass.DOOR, ["main", "additionalVehicleStatus", "drivingSafetyStatus", "trunkOpenStatus"]),
         ZeekrBinary(coordinator, p, "Kofferbak Slot", BinarySensorDeviceClass.LOCK, ["main", "additionalVehicleStatus", "drivingSafetyStatus", "trunkLockStatus"], invert=True),
         ZeekrBinary(coordinator, p, "Bestuurdersdeur", BinarySensorDeviceClass.DOOR, ["main", "additionalVehicleStatus", "drivingSafetyStatus", "doorOpenStatusDriver"]),
+        ZeekrBinary(coordinator, p, "Passagiersdeur", BinarySensorDeviceClass.DOOR, ["main", "additionalVehicleStatus", "drivingSafetyStatus", "doorOpenStatusPassenger"]),
+        ZeekrBinary(coordinator, p, "Achterdeur Bestuurder", BinarySensorDeviceClass.DOOR, ["main", "additionalVehicleStatus", "drivingSafetyStatus", "doorOpenStatusDriverRear"]),
+        ZeekrBinary(coordinator, p, "Achterdeur Passagier", BinarySensorDeviceClass.DOOR, ["main", "additionalVehicleStatus", "drivingSafetyStatus", "doorOpenStatusPassengerRear"]),
         
         # Sentry & Comfort
         ZeekrBinary(coordinator, p, "Camping Modus", None, ["sentry", "campingModeState"], icon="mdi:tent"),
