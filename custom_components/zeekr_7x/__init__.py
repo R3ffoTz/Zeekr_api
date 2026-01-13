@@ -22,7 +22,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
 
 class ZeekrCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, entry):
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=timedelta(seconds=30))
+        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=timedelta(minutes=15))
         self.entry = entry
 
     async def _get_valid_token(self):

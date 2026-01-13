@@ -130,7 +130,7 @@ class ZeekrSensor(CoordinatorEntity, SensorEntity):
             return mapping.get(str(val).strip().lower(), f"Status {val}")
 
         # F. Voertuig Status (Mapping)
-        if "Gebruikersmodus" in self._raw_name:
+        if "Voertuig Status" in self._raw_name:
             # Gebaseerd op geanalyseerde JSON snapshots
             mapping = {
                 "0": "Slaapstand (Deep Sleep)",
