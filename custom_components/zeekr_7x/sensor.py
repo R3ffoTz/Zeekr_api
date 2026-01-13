@@ -25,8 +25,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ("Laadtijd Minuten", ["main", "additionalVehicleStatus", "electricVehicleStatus", "timeToFullyCharged"], "min", None),
         ("Actieradius", ["main", "additionalVehicleStatus", "electricVehicleStatus", "distanceToEmptyOnBatteryOnly"], "km", "mdi:map-marker-distance"),
         # --- Status & Aandrijving ---
-        ("Voertuig Status", ["main", "basicVehicleStatus", "engineStatus"], None, "mdi:car"),
-
+        ("Voertuig Status", ["main", "basicVehicleStatus", "usageMode"], None, "mdi:car-connected"),
+        ("Motor Status", ["main", "basicVehicleStatus", "engineStatus"], None, "mdi:car"),
         # --- Laadplanning (Direct uit de API) ---
         ("Geplande Laadtijd", ["plan", "startTime"], None, "mdi:clock-outline"),
         
@@ -119,8 +119,8 @@ class ZeekrSensor(CoordinatorEntity, SensorEntity):
                 return int(float(val))
             except (ValueError, TypeError): return val
 
-        # E. Voertuig Status (Mapping)
-        if "Voertuig Status" in self._raw_name:
+        # E. Motor Status (Mapping)
+        if "Motor Status" in self._raw_name:
             mapping = {
                 "engine-off": "Geparkeerd",
                 "engine-running": "Rijdend",
@@ -128,6 +128,19 @@ class ZeekrSensor(CoordinatorEntity, SensorEntity):
                 "charging": "Aan het laden"
             }
             return mapping.get(str(val).strip().lower(), f"Status {val}")
+
+        # F. Voertuig Status (Mapping)
+        if "Gebruikersmodus" in self._raw_name:
+            # Gebaseerd op geanalyseerde JSON snapshots
+            mapping = {
+                "0": "Slaapstand (Deep Sleep)",
+                "1": "Geparkeerd",
+                "2": "Ontgrendeld (Convenience)",
+                "3": "Systeem Actief",
+                "4": "Gereed voor vertrek",
+                "13": "Actief (Rijdend of Stilstaand)",
+            }
+            return mapping.get(str(val).strip(), f"Modus {val}")
             
         return val
 
