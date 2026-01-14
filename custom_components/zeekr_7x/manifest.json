@@ -1,12 +1,18 @@
+
 {
-  "domain": "zeekr_7x",
-  "name": "Zeekr 7x",
+  "name": "zeekr_api",
   "version": "1.0.0",
-  "config_flow": true,
-  "documentation": "https://github.com/japyjaap/Zeekr_7x_Homeassistant",
-  "codeowners": ["@japyjaap"],
-  "issue_tracker": "https://github.com/japyjaap/Zeekr_7x_Homeassistant/issues",
-  "iot_class": "cloud_polling",
-  "brand": true,
-  "codeowners": ["@me"]
+  "contributors": [
+    "japyjaap",
+    "R3ffoTz"
+    ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/R3ffoTz/Zeekr_api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/R3ffoTz/Zeekr_api/issues"
+  },
+  "homepage": "https://github.com/R3ffoTz/Zeekr_api#readme",
+  "license": "MIT"
 }
