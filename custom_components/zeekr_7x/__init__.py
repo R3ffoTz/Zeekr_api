@@ -2,10 +2,12 @@ import asyncio
 from datetime import timedelta
 import logging
 import aiohttp
+import time as python_time
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-from .const import DOMAIN, PLATFORMS, URL_STATUS, URL_SENTRY, URL_TRAVEL, URL_LIST, URL_QRVS, URL_SOC, URL_CHARGE_PLAN
+from homeassistant.exceptions import ConfigEntryAuthFailed
+from .const import DOMAIN, PLATFORMS, URL_STATUS, URL_SENTRY, URL_TRAVEL, URL_LIST, URL_QRVS, URL_SOC, URL_CHARGE_PLAN, URL_LOGIN
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -44,7 +46,7 @@ class ZeekrCoordinator(DataUpdateCoordinator):
             "Content-Type": "application/json"
         }
 
-        # We definiëren de taken voor asyncio.gather
+        # We definiÃ«ren de taken voor asyncio.gather
         # De volgorde is belangrijk voor het uitpakken later
         endpoints = [
             URL_STATUS,      # 0
