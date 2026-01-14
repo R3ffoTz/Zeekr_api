@@ -11,9 +11,12 @@ class ZeekrDeviceTracker(CoordinatorEntity, TrackerEntity):
         super().__init__(coordinator)
         prefix = coordinator.entry.data.get("name", "Zeekr 7X")
         vin = coordinator.entry.data.get('vin')
-        self._attr_name = f"{prefix} Locatie"
+        
+        self._attr_translation_key = "location"
+        self._attr_has_entity_name = True
         self._attr_unique_id = f"{coordinator.entry.entry_id}_location"
         self._attr_icon = "mdi:car-connected"
+        
         self._attr_device_info = {
             "identifiers": {(DOMAIN, vin)},
             "name": prefix,
@@ -26,8 +29,7 @@ class ZeekrDeviceTracker(CoordinatorEntity, TrackerEntity):
 
     @property
     def latitude(self):
-        """Haal de breedtegraad op (nu via de 'main' key)."""
-        # Let op de toevoeging van .get("main", {})
+        """HÃ¤mta latitud (nu via 'main' nyckeln)."""
         pos = self.coordinator.data.get("main", {}).get("basicVehicleStatus", {}).get("position", {})
         try:
             return float(pos.get("latitude"))
@@ -36,7 +38,7 @@ class ZeekrDeviceTracker(CoordinatorEntity, TrackerEntity):
 
     @property
     def longitude(self):
-        """Haal de lengtegraad op (nu via de 'main' key)."""
+        """HÃ¤mta longitud (nu via 'main' nyckeln)."""
         pos = self.coordinator.data.get("main", {}).get("basicVehicleStatus", {}).get("position", {})
         try:
             return float(pos.get("longitude"))
@@ -45,7 +47,7 @@ class ZeekrDeviceTracker(CoordinatorEntity, TrackerEntity):
 
     @property
     def extra_state_attributes(self):
-        """Extra informatie zoals hoogte en richting."""
+        """Extra information som hÃ¶jd och riktning."""
         pos = self.coordinator.data.get("main", {}).get("basicVehicleStatus", {}).get("position", {})
         return {
             "altitude": pos.get("altitude"),
