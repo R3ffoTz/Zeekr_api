@@ -1,6 +1,6 @@
 {
-  "name": "Zeekr 7X Integration",
+  "name": "Zeekr_api",
   "render_readme": true,
-  "category": "integration",
-  "homeassistant": "2024.1.0"
+  "domains": ["sensor", "binary_sensor", "device_tracker", "lock", "switch"],
+  "homeassistant": "2023.1.0"
 }
