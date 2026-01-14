@@ -21,9 +21,12 @@ class ZeekrTravelUpdateButton(ButtonEntity):
         self.coordinator = coordinator
         vin = coordinator.entry.data.get('vin')
         self._entry_id = entry_id
-        self._attr_name = f"{prefix} Update Reisplan"
+        
+        self._attr_translation_key = "update_travel_plan"
+        self._attr_has_entity_name = True
         self._attr_unique_id = f"{entry_id}_travel_update"
         self._attr_icon = "mdi:cloud-upload"
+        
         self._attr_device_info = {
             "identifiers": {(DOMAIN, vin)},
             "name": prefix,
@@ -41,9 +44,12 @@ class ZeekrRefreshButton(ButtonEntity):
     def __init__(self, coordinator, prefix):
         self.coordinator = coordinator
         vin = coordinator.entry.data.get('vin')
-        self._attr_name = f"{prefix} Data Verversen"
-        self._attr_unique_id = f"{self.coordinator.entry.entry_id}_refresh_button"
+        
+        self._attr_translation_key = "refresh_data"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_refresh_button"
         self._attr_icon = "mdi:database-refresh"
+        
         self._attr_device_info = {
             "identifiers": {(DOMAIN, vin)},
             "name": prefix,
@@ -57,9 +63,12 @@ class ZeekrTrunkButton(CoordinatorEntity, ButtonEntity):
     def __init__(self, coordinator, prefix):
         super().__init__(coordinator)
         vin = coordinator.entry.data.get('vin')
-        self._attr_name = f"{prefix} Kofferbak openen"
-        self._attr_unique_id = f"{self.coordinator.entry.entry_id}_trunk_button"
+        
+        self._attr_translation_key = "open_trunk"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_trunk_button"
         self._attr_icon = "mdi:car-back"
+        
         self._attr_device_info = {
             "identifiers": {(DOMAIN, vin)},
             "name": prefix,
@@ -67,7 +76,6 @@ class ZeekrTrunkButton(CoordinatorEntity, ButtonEntity):
         }
 
     async def async_press(self):
-
         payload = {
             "command": "start",
             "serviceId": "RDU",
