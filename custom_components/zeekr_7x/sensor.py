@@ -1,6 +1,7 @@
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from homeassistant.const import PERCENTAGE, UnitOfPower, UnitOfTemperature, UnitOfPressure
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.entity import EntityCategory
 from .const import DOMAIN
 import logging
 
@@ -11,40 +12,42 @@ async def async_setup_entry(hass, entry, async_add_entities):
     prefix = coordinator.entry.data.get("name", "Zeekr 7X")
     
     sensor_definitions = [
-        # --- Voertuig Identificatie ---
-        ("Software Versie", ["info", "displayOSVersion"], None, "mdi:car-info"),
-        ("Kenteken", ["info", "plateNo"], None, "mdi:card-account-details"),
-        ("Vin", ["info", "vin"], None, "mdi:car-info"),
+        # --- Vehicle Identification ---
+        ("software_version", ["info", "displayOSVersion"], None, "mdi:car-info", EntityCategory.DIAGNOSTIC),
+        ("license_plate", ["info", "plateNo"], None, "mdi:card-account-details", None),
+        ("vin", ["info", "vin"], None, "mdi:car-info", EntityCategory.DIAGNOSTIC),
         
-        # --- Batterij & Laden ---
-        ("Accu Percentage", ["main", "additionalVehicleStatus", "electricVehicleStatus", "chargeLevel"], PERCENTAGE, SensorDeviceClass.BATTERY),
-        ("Laadstatus", ["qrvs", "chargerState"], None, None),
-        ("Laadstroom", ["qrvs", "chargeCurrent"], "A", "mdi:current-ac"),
-        ("Laadspanning", ["qrvs", "chargeVoltage"], "V", "mdi:flash"),
-        ("Laadvermogen", ["qrvs", "chargePower"], "kW", SensorDeviceClass.POWER),
-        ("Laadtijd Minuten", ["main", "additionalVehicleStatus", "electricVehicleStatus", "timeToFullyCharged"], "min", None),
-        ("Actieradius", ["main", "additionalVehicleStatus", "electricVehicleStatus", "distanceToEmptyOnBatteryOnly"], "km", "mdi:map-marker-distance"),
-        # --- Status & Aandrijving ---
-        ("Voertuig Status", ["main", "basicVehicleStatus", "usageMode"], None, "mdi:car-connected"),
-        ("Motor Status", ["main", "basicVehicleStatus", "engineStatus"], None, "mdi:car"),
-        # --- Laadplanning (Direct uit de API) ---
-        ("Geplande Laadtijd", ["plan", "startTime"], None, "mdi:clock-outline"),
+        # --- Battery & Charging ---
+        ("battery_percentage", ["main", "additionalVehicleStatus", "electricVehicleStatus", "chargeLevel"], PERCENTAGE, SensorDeviceClass.BATTERY, None),
+        ("charging_status", ["qrvs", "chargerState"], None, None, None),
+        ("charging_current", ["qrvs", "chargeCurrent"], "A", "mdi:current-ac", None),
+        ("charging_voltage", ["qrvs", "chargeVoltage"], "V", "mdi:flash", None),
+        ("charging_power", ["qrvs", "chargePower"], "kW", SensorDeviceClass.POWER, None),
+        ("charging_time_minutes", ["main", "additionalVehicleStatus", "electricVehicleStatus", "timeToFullyCharged"], "min", None, None),
+        ("range", ["main", "additionalVehicleStatus", "electricVehicleStatus", "distanceToEmptyOnBatteryOnly"], "km", "mdi:map-marker-distance", None),
         
-        # --- Banden (Spanning & Temperatuur) ---
-        ("Bandenspanning LV", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusDriver"], "bar", SensorDeviceClass.PRESSURE),
-        ("Bandenspanning RV", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusPassenger"], "bar", SensorDeviceClass.PRESSURE),
-        ("Bandenspanning LA", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusDriverRear"], "bar", SensorDeviceClass.PRESSURE),
-        ("Bandenspanning RA", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusPassengerRear"], "bar", SensorDeviceClass.PRESSURE),
-        ("Bandentemperatuur LV", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriver"], "°C", SensorDeviceClass.TEMPERATURE),
-        ("Bandentemperatuur RV", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassenger"], "°C", SensorDeviceClass.TEMPERATURE),
-        ("Bandentemperatuur LA", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriverRear"], "°C", SensorDeviceClass.TEMPERATURE),
-        ("Bandentemperatuur RA", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassengerRear"], "°C", SensorDeviceClass.TEMPERATURE),
+        # --- Status & Drive ---
+        ("vehicle_status", ["main", "basicVehicleStatus", "usageMode"], None, "mdi:car-connected", None),
+        ("engine_status", ["main", "basicVehicleStatus", "engineStatus"], None, "mdi:car", None),
         
-        # --- Onderhoud & Status ---
-        ("Kilometerstand", ["main", "additionalVehicleStatus", "maintenanceStatus", "odometer"], "km", "mdi:counter"),
-        ("Afstand tot Onderhoud", ["main", "additionalVehicleStatus","maintenanceStatus", "distanceToService"], "km", SensorDeviceClass.DISTANCE),
-        ("Dagen tot Onderhoud", ["main", "additionalVehicleStatus","maintenanceStatus", "daysToService"], "dagen", None),
-        ("Binnen Temperatuur", ["main", "additionalVehicleStatus", "climateStatus", "interiorTemp"], "°C", SensorDeviceClass.TEMPERATURE),
+        # --- Charge Planning ---
+        ("scheduled_charge_time", ["plan", "startTime"], None, "mdi:clock-outline", None),
+        
+        # --- Tires (Pressure & Temperature) ---
+        ("tire_pressure_fl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusDriver"], "bar", SensorDeviceClass.PRESSURE, None),
+        ("tire_pressure_fr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusPassenger"], "bar", SensorDeviceClass.PRESSURE, None),
+        ("tire_pressure_rl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusDriverRear"], "bar", SensorDeviceClass.PRESSURE, None),
+        ("tire_pressure_rr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusPassengerRear"], "bar", SensorDeviceClass.PRESSURE, None),
+        ("tire_temp_fl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriver"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_fr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassenger"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_rl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriverRear"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_rr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassengerRear"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
+        
+        # --- Maintenance & Status ---
+        ("odometer", ["main", "additionalVehicleStatus", "maintenanceStatus", "odometer"], "km", "mdi:counter", None),
+        ("distance_to_service", ["main", "additionalVehicleStatus","maintenanceStatus", "distanceToService"], "km", SensorDeviceClass.DISTANCE, None),
+        ("days_to_service", ["main", "additionalVehicleStatus","maintenanceStatus", "daysToService"], "d", None, None),
+        ("interior_temp", ["main", "additionalVehicleStatus", "climateStatus", "interiorTemp"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
     ]
     
     entities = [ZeekrSensor(coordinator, prefix, *s) for s in sensor_definitions]
@@ -54,13 +57,17 @@ async def async_setup_entry(hass, entry, async_add_entities):
     async_add_entities(entities)
 
 class ZeekrSensor(CoordinatorEntity, SensorEntity):
-    def __init__(self, coordinator, prefix, name, path, unit, dev_class_or_icon):
+    def __init__(self, coordinator, prefix, translation_key, path, unit, dev_class_or_icon, category):
         super().__init__(coordinator)
         self.path = path
-        self._raw_name = name
-        self._attr_name = f"{prefix} {name}"
-        self._attr_unique_id = f"{coordinator.entry.entry_id}_{name.lower().replace(' ', '_')}"
+        self._translation_key = translation_key
+        self._attr_translation_key = translation_key
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_{translation_key}"
         self._attr_native_unit_of_measurement = unit
+        
+        if category:
+            self._attr_entity_category = category
 
         vin = coordinator.entry.data.get("vin")
         info = coordinator.data.get("info", {})
@@ -93,65 +100,71 @@ class ZeekrSensor(CoordinatorEntity, SensorEntity):
         if val is None:
             return None
 
-        # --- CONVERSIES ---
+        # --- CONVERSIONS ---
         
-        # A. Bandenspanning (Altijd naar getal voor bar)
-        if "Bandenspanning" in self._raw_name:
+        # A. Tire Pressure (Always to number for bar)
+        if "tire_pressure" in self._translation_key:
             try:
                 return round(float(val) / 100, 2)
             except: return val
 
-        # B. Accu & Limiet (Altijd naar getal)
-        if any(x in self._raw_name for x in ["Laadlimiet"]):
+        # B. Battery & Limit (Always to number)
+        if "charge_limit" in self._translation_key:
             try:
                 num = float(val)
                 return num / 10 if num > 100 else num
             except: return val
 
-        # C. Laadstatus
-        if "Laadstatus" in self._raw_name:
-            mapping = {"0": "Niet aan het laden", "2": "Aan het laden", "3": "Verbonden", "4": "Laden voltooid"}
-            return mapping.get(str(val).strip(), f"Status {val}")
+        # C. Charging Status - return key for translation
+        if "charging_status" in self._translation_key:
+            status_map = {
+                "0": "not_charging",
+                "2": "charging",
+                "3": "connected",
+                "4": "charge_complete"
+            }
+            return status_map.get(str(val).strip(), val)
 
-        # D. Kilometers afronden
+        # D. Round kilometers
         if self._attr_native_unit_of_measurement == "km":
             try:
                 return int(float(val))
             except (ValueError, TypeError): return val
 
-        # E. Motor Status (Mapping)
-        if "Motor Status" in self._raw_name:
-            mapping = {
-                "engine-off": "Geparkeerd",
-                "engine-running": "Rijdend",
-                "ready": "Startklaar",
-                "charging": "Aan het laden"
+        # E. Engine Status - return key for translation
+        if "engine_status" in self._translation_key:
+            status_map = {
+                "engine-off": "parked",
+                "engine-running": "driving",
+                "ready": "ready",
+                "charging": "charging"
             }
-            return mapping.get(str(val).strip().lower(), f"Status {val}")
+            return status_map.get(str(val).strip().lower(), val)
 
-        # F. Voertuig Status (Mapping)
-        if "Voertuig Status" in self._raw_name:
-            # Gebaseerd op geanalyseerde JSON snapshots
-            mapping = {
-                "0": "Slaapstand (Deep Sleep)",
-                "1": "Geparkeerd",
-                "2": "Ontgrendeld (Convenience)",
-                "3": "Systeem Actief",
-                "4": "Gereed voor vertrek",
-                "13": "Actief (Rijdend of Stilstaand)",
+        # F. Vehicle Status - return key for translation
+        if "vehicle_status" in self._translation_key:
+            status_map = {
+                "0": "deep_sleep",
+                "1": "parked",
+                "2": "unlocked",
+                "3": "system_active",
+                "4": "ready_to_go",
+                "13": "active",
             }
-            return mapping.get(str(val).strip(), f"Modus {val}")
+            return status_map.get(str(val).strip(), val)
             
         return val
 
 class ZeekrChargingTimeFormattedSensor(CoordinatorEntity, SensorEntity):
-    """Speciale sensor voor nette weergave van laadtijd."""
+    """Special sensor for nice display of charging time."""
     def __init__(self, coordinator, prefix):
         super().__init__(coordinator)
         vin = coordinator.entry.data.get("vin")
         info = coordinator.data.get("main", {}).get("vehicleBasicInfo", {})
         self.path = ["main", "additionalVehicleStatus", "electricVehicleStatus", "timeToFullyCharged"]
-        self._attr_name = f"{prefix} Laadtijd Resterend"
+        
+        self._attr_translation_key = "charging_time_remaining"
+        self._attr_has_entity_name = True
         self._attr_unique_id = f"{coordinator.entry.entry_id}_charging_time_formatted"
         self._attr_icon = "mdi:timer-sand"
         self._attr_device_info = {
@@ -161,6 +174,7 @@ class ZeekrChargingTimeFormattedSensor(CoordinatorEntity, SensorEntity):
             "model": info.get("vehicleModelName", "7X"),
             "sw_version": info.get("softwareVersion"),
         }
+        
     @property
     def native_value(self):
         val = self.coordinator.data
@@ -173,11 +187,11 @@ class ZeekrChargingTimeFormattedSensor(CoordinatorEntity, SensorEntity):
         try:
             minutes = int(val)
             if minutes >= 2047 or minutes <= 0:
-                return "Niet aan het laden"
+                return "Not charging"
             
             hours, mins = divmod(minutes, 60)
             if hours > 0:
-                return f"{hours}u {mins}m"
+                return f"{hours}h {mins}m"
             return f"{mins}m"
         except (ValueError, TypeError):
-            return "Onbekend"
+            return "Unknown"
