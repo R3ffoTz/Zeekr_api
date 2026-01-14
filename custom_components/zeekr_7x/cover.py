@@ -15,8 +15,11 @@ class ZeekrSunshade(CoordinatorEntity, CoverEntity):
     def __init__(self, coordinator, prefix):
         super().__init__(coordinator)
         vin = coordinator.entry.data.get('vin')
-        self._attr_name = f"{prefix} Zonnescherm"
+        
+        self._attr_translation_key = "sunshade"
+        self._attr_has_entity_name = True
         self._attr_unique_id = f"{coordinator.entry.entry_id}_sunshade_cover"
+        
         self._attr_device_info = {
             "identifiers": {(DOMAIN, vin)},
             "name": prefix,
@@ -33,13 +36,29 @@ class ZeekrSunshade(CoordinatorEntity, CoverEntity):
         return self.coordinator.data.get("main", {}).get("additionalVehicleStatus", {}).get("climateStatus", {}).get("curtainPos")
 
     async def async_open_cover(self, **kwargs):
-        payload = {"command": "start", "serviceId": "RWS", "setting": {"serviceParameters": [{"key": "target", "value": "sunshade"}]}}
+        payload = {
+            "command": "start", 
+            "serviceId": "RWS", 
+            "setting": {
+                "serviceParameters": [
+                    {"key": "target", "value": "sunshade"}
+                ]
+            }
+        }
         await self.coordinator.send_command(URL_CONTROL, payload, "Zonnescherm Openen")
         await asyncio.sleep(2)
         await self.coordinator.async_request_refresh()
 
     async def async_close_cover(self, **kwargs):
-        payload = {"command": "stop", "serviceId": "RWS", "setting": {"serviceParameters": [{"key": "target", "value": "sunshade"}]}}
+        payload = {
+            "command": "stop", 
+            "serviceId": "RWS", 
+            "setting": {
+                "serviceParameters": [
+                    {"key": "target", "value": "sunshade"}
+                ]
+            }
+        }
         await self.coordinator.send_command(URL_CONTROL, payload, "Zonnescherm Sluiten")
         await asyncio.sleep(2)
         await self.coordinator.async_request_refresh()
