@@ -5,4 +5,4 @@
 !/.gitignore
 
 /custom_components/*
-!/custom_components/zeekr_7x/
+!/custom_components/zeekr_api/
