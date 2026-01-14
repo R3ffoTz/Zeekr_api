@@ -14,8 +14,11 @@ class ZeekrLock(CoordinatorEntity, LockEntity):
         super().__init__(coordinator)
         prefix = coordinator.entry.data.get("name", "Zeekr 7X")
         vin = coordinator.entry.data.get('vin')
-        self._attr_name = f"{prefix} Deurslot"
+        
+        self._attr_translation_key = "door_lock"
+        self._attr_has_entity_name = True
         self._attr_unique_id = f"{coordinator.entry.entry_id}_central_lock"
+        
         self._attr_device_info = {
             "identifiers": {(DOMAIN, vin)},
             "name": prefix,
@@ -31,7 +34,11 @@ class ZeekrLock(CoordinatorEntity, LockEntity):
         payload = {
             "command": "stop", 
             "serviceId": "RDL", 
-            "setting": {"serviceParameters": [{"key": "door", "value": "all"}]}
+            "setting": {
+                "serviceParameters": [
+                    {"key": "door", "value": "all"}
+                ]
+            }
         }
         await self.coordinator.send_command(URL_CONTROL, payload, "Deuren vergrendelen")
         await self.coordinator.async_request_refresh()
@@ -40,7 +47,11 @@ class ZeekrLock(CoordinatorEntity, LockEntity):
         payload = {
             "command": "start", 
             "serviceId": "RDU", 
-            "setting": {"serviceParameters": [{"key": "door", "value": "all"}]}
+            "setting": {
+                "serviceParameters": [
+                    {"key": "door", "value": "all"}
+                ]
+            }
         }
         await self.coordinator.send_command(URL_CONTROL, payload, "Deuren ontgrendelen")
         await self.coordinator.async_request_refresh()
