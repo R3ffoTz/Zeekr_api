@@ -15,19 +15,22 @@ class ZeekrChargeLimit(CoordinatorEntity, NumberEntity):
         self.entry = entry
         prefix = coordinator.entry.data.get('name', 'Zeekr 7X')
         vin = coordinator.entry.data.get('vin')
-        self._attr_name = f"{prefix} Laadlimiet"
+        
+        self._attr_translation_key = "charge_limit"
+        self._attr_has_entity_name = True
         self._attr_unique_id = f"{entry.entry_id}_charge_limit"
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, vin)},
-            "name": prefix,
-            "manufacturer": "Zeekr",
-            "model": "7X",
-            }
         self._attr_native_min_value = 50
         self._attr_native_max_value = 100
         self._attr_native_step = 1
         self._attr_native_unit_of_measurement = "%"
         self._attr_icon = "mdi:battery-charging-80"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+            "model": "7X",
+        }
 
     @property
     def native_value(self):
@@ -71,12 +74,10 @@ class ZeekrChargeLimit(CoordinatorEntity, NumberEntity):
             }
         }
 
-        # Verstuur naar de gecorrigeerde URL_CHARGE_CONTROL
         await self.coordinator.send_command(
             URL_CHARGE_CONTROL, 
             payload, 
             f"Laadlimiet instellen op {value}% ({api_value})"
         )
         
-        # Update de status direct in de UI
         self.async_write_ha_state()
