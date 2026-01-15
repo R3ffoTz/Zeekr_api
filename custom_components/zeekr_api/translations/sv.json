@@ -1,0 +1,289 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Konfigurera Zeekr API",
+        "description": "Ange dina Zeekr-fordonsinloggningsuppgifter. Hämta dessa värden från Zeekr-appens nätverkstrafik med Proxyman eller liknande verktyg.",
+        "data": {
+          "name": "Fordonsnamn",
+          "vin": "VIN (Chassinummer)",
+          "access_token": "Access Token (utan 'Bearer' prefix)",
+          "refresh_token": "Refresh Token (valfritt - aktiverar automatisk tokenförnyelse)",
+          "identifier": "Identifierare (valfritt - krävs för automatisk tokenförnyelse)"
+        },
+        "data_description": {
+          "access_token": "JWT access token från Zeekr API (utan 'Bearer' prefix)",
+          "refresh_token": "Refresh token som används för att automatiskt förnya access token",
+          "identifier": "Den krypterade identifieraren som används vid inloggning (krävs för auto-refresh)"
+        }
+      },
+      "reconfigure": {
+        "title": "Konfigurera om Zeekr API",
+        "description": "Uppdatera dina tokens. Lämna fält tomma för att behålla nuvarande värden.",
+        "data": {
+          "access_token": "Ny Access Token (valfritt)",
+          "refresh_token": "Ny Refresh Token (valfritt)",
+          "identifier": "Ny Identifierare (valfritt)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kunde inte ansluta",
+      "invalid_auth": "Ogiltig autentisering",
+      "unknown": "Oväntat fel"
+    },
+    "abort": {
+      "already_configured": "Enheten är redan konfigurerad",
+      "reconfigure_successful": "Omkonfigurering lyckades"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "software_version": {
+        "name": "Programvaruversion"
+      },
+      "license_plate": {
+        "name": "Registreringsnummer"
+      },
+      "vin": {
+        "name": "Chassinummer"
+      },
+      "battery_percentage": {
+        "name": "Batteri"
+      },
+      "charging_status": {
+        "name": "Laddningsstatus",
+        "state": {
+          "not_charging": "Laddar inte",
+          "charging": "Laddar",
+          "connected": "Ansluten",
+          "charge_complete": "Laddning klar"
+        }
+      },
+      "charging_current": {
+        "name": "Laddström"
+      },
+      "charging_voltage": {
+        "name": "Laddspänning"
+      },
+      "charging_power": {
+        "name": "Laddeffekt"
+      },
+      "charging_time_minutes": {
+        "name": "Laddningstid"
+      },
+      "range": {
+        "name": "Räckvidd"
+      },
+      "vehicle_status": {
+        "name": "Fordonsstatus",
+        "state": {
+          "deep_sleep": "Djup sömn",
+          "parked": "Parkerad",
+          "unlocked": "Olåst",
+          "system_active": "System aktivt",
+          "ready_to_go": "Redo att köra",
+          "active": "Aktiv"
+        }
+      },
+      "engine_status": {
+        "name": "Motorstatus",
+        "state": {
+          "parked": "Parkerad",
+          "driving": "Kör",
+          "ready": "Redo",
+          "charging": "Laddar"
+        }
+      },
+      "scheduled_charge_time": {
+        "name": "Schemalagd laddningstid"
+      },
+      "tire_pressure_fl": {
+        "name": "Däcktryck fram vänster"
+      },
+      "tire_pressure_fr": {
+        "name": "Däcktryck fram höger"
+      },
+      "tire_pressure_rl": {
+        "name": "Däcktryck bak vänster"
+      },
+      "tire_pressure_rr": {
+        "name": "Däcktryck bak höger"
+      },
+      "tire_temp_fl": {
+        "name": "Däcktemperatur fram vänster"
+      },
+      "tire_temp_fr": {
+        "name": "Däcktemperatur fram höger"
+      },
+      "tire_temp_rl": {
+        "name": "Däcktemperatur bak vänster"
+      },
+      "tire_temp_rr": {
+        "name": "Däcktemperatur bak höger"
+      },
+      "odometer": {
+        "name": "Vägmätare"
+      },
+      "distance_to_service": {
+        "name": "Avstånd till service"
+      },
+      "days_to_service": {
+        "name": "Dagar till service"
+      },
+      "interior_temp": {
+        "name": "Inomhustemperatur"
+      },
+      "charging_time_remaining": {
+        "name": "Återstående laddningstid"
+      }
+    },
+    "binary_sensor": {
+      "ac_active": {
+        "name": "Luftkonditionering"
+      },
+      "charging_cable": {
+        "name": "Laddkabel"
+      },
+      "charging": {
+        "name": "Laddar"
+      },
+      "frunk": {
+        "name": "Frunk"
+      },
+      "trunk": {
+        "name": "Bagagelucka"
+      },
+      "trunk_lock": {
+        "name": "Bagagelucka lås"
+      },
+      "driver_door": {
+        "name": "Förardörr"
+      },
+      "passenger_door": {
+        "name": "Passagerardörr"
+      },
+      "rear_driver_door": {
+        "name": "Bakre förardörr"
+      },
+      "rear_passenger_door": {
+        "name": "Bakre passagerardörr"
+      },
+      "camping_mode": {
+        "name": "Campingläge"
+      },
+      "car_wash_mode": {
+        "name": "Biltvätt-läge"
+      },
+      "washer_fluid": {
+        "name": "Spolarvätska"
+      }
+    },
+    "switch": {
+      "travel_plan": {
+        "name": "Reseplan"
+      },
+      "cabin_comfort": {
+        "name": "Kupéförkonditionering"
+      },
+      "battery_warmup": {
+        "name": "Batterikonditionering"
+      },
+      "cycle": {
+        "name": "Detaljerad reseplan"
+      },
+      "ac": {
+        "name": "Luftkonditionering"
+      },
+      "charge_plan": {
+        "name": "Laddningsplan"
+      },
+      "sentry_mode": {
+        "name": "Vaktläge"
+      },
+      "steering_wheel_heating": {
+        "name": "Rattvärme"
+      },
+      "defrost": {
+        "name": "Avfrostning"
+      },
+      "monday": {
+        "name": "Måndag aktiv"
+      },
+      "tuesday": {
+        "name": "Tisdag aktiv"
+      },
+      "wednesday": {
+        "name": "Onsdag aktiv"
+      },
+      "thursday": {
+        "name": "Torsdag aktiv"
+      },
+      "friday": {
+        "name": "Fredag aktiv"
+      },
+      "saturday": {
+        "name": "Lördag aktiv"
+      },
+      "sunday": {
+        "name": "Söndag aktiv"
+      }
+    },
+    "button": {
+      "refresh_data": {
+        "name": "Uppdatera data"
+      },
+      "open_trunk": {
+        "name": "Öppna bagagelucka"
+      },
+      "update_travel_plan": {
+        "name": "Uppdatera reseplan"
+      }
+    },
+    "climate": {
+      "thermostat": {
+        "name": "Klimatkontroll",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "standard": "Standard",
+              "quick_heat": "Snabbvärme",
+              "quick_cool": "Snabbkyla"
+            }
+          }
+        }
+      }
+    },
+    "lock": {
+      "door_lock": {
+        "name": "Dörrlås"
+      }
+    },
+    "cover": {
+      "sunshade": {
+        "name": "Solskydd"
+      }
+    },
+    "number": {
+      "charge_limit": {
+        "name": "Laddningsgräns"
+      }
+    },
+    "device_tracker": {
+      "location": {
+        "name": "Plats"
+      }
+    },
+    "time": {
+      "charge_start_time": {
+        "name": "Laddning starttid"
+      },
+      "charge_end_time": {
+        "name": "Laddning sluttid"
+      },
+      "travel_time": {
+        "name": "Resetid"
+      }
+    }
+  }
+}
