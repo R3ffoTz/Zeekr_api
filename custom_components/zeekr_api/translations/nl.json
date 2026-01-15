@@ -1,0 +1,289 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Zeekr API instellen",
+        "description": "Voer uw Zeekr-voertuiginloggegevens in. Verkrijg deze waarden uit het netwerkverkeer van de Zeekr-app met Proxyman of een vergelijkbaar hulpmiddel.",
+        "data": {
+          "name": "Voertuignaam",
+          "vin": "VIN (Voertuigidentificatienummer)",
+          "access_token": "Access Token (zonder 'Bearer' prefix)",
+          "refresh_token": "Refresh Token (optioneel - activeert automatische tokenvernieuwing)",
+          "identifier": "Identificatie (optioneel - vereist voor automatische tokenvernieuwing)"
+        },
+        "data_description": {
+          "access_token": "Het JWT access token van de Zeekr API (zonder 'Bearer' prefix)",
+          "refresh_token": "Het refresh token dat wordt gebruikt om het access token automatisch te vernieuwen",
+          "identifier": "De versleutelde identificatie die wordt gebruikt tijdens inloggen (vereist voor auto-refresh)"
+        }
+      },
+      "reconfigure": {
+        "title": "Zeekr API opnieuw configureren",
+        "description": "Werk uw tokens bij. Laat velden leeg om huidige waarden te behouden.",
+        "data": {
+          "access_token": "Nieuw Access Token (optioneel)",
+          "refresh_token": "Nieuw Refresh Token (optioneel)",
+          "identifier": "Nieuwe Identificatie (optioneel)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbinding mislukt",
+      "invalid_auth": "Ongeldige authenticatie",
+      "unknown": "Onverwachte fout"
+    },
+    "abort": {
+      "already_configured": "Apparaat is al geconfigureerd",
+      "reconfigure_successful": "Herconfiguratie geslaagd"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "software_version": {
+        "name": "Softwareversie"
+      },
+      "license_plate": {
+        "name": "Kenteken"
+      },
+      "vin": {
+        "name": "VIN"
+      },
+      "battery_percentage": {
+        "name": "Batterij"
+      },
+      "charging_status": {
+        "name": "Laadstatus",
+        "state": {
+          "not_charging": "Laadt niet",
+          "charging": "Bezig met laden",
+          "connected": "Verbonden",
+          "charge_complete": "Laden voltooid"
+        }
+      },
+      "charging_current": {
+        "name": "Laadstroom"
+      },
+      "charging_voltage": {
+        "name": "Laadspanning"
+      },
+      "charging_power": {
+        "name": "Laadvermogen"
+      },
+      "charging_time_minutes": {
+        "name": "Laadtijd"
+      },
+      "range": {
+        "name": "Bereik"
+      },
+      "vehicle_status": {
+        "name": "Voertuigstatus",
+        "state": {
+          "deep_sleep": "Diepe slaap",
+          "parked": "Geparkeerd",
+          "unlocked": "Ontgrendeld",
+          "system_active": "Systeem actief",
+          "ready_to_go": "Klaar om te rijden",
+          "active": "Actief"
+        }
+      },
+      "engine_status": {
+        "name": "Motorstatus",
+        "state": {
+          "parked": "Geparkeerd",
+          "driving": "Rijdend",
+          "ready": "Gereed",
+          "charging": "Bezig met laden"
+        }
+      },
+      "scheduled_charge_time": {
+        "name": "Geplande laadtijd"
+      },
+      "tire_pressure_fl": {
+        "name": "Bandenspanning voor links"
+      },
+      "tire_pressure_fr": {
+        "name": "Bandenspanning voor rechts"
+      },
+      "tire_pressure_rl": {
+        "name": "Bandenspanning achter links"
+      },
+      "tire_pressure_rr": {
+        "name": "Bandenspanning achter rechts"
+      },
+      "tire_temp_fl": {
+        "name": "Bandentemperatuur voor links"
+      },
+      "tire_temp_fr": {
+        "name": "Bandentemperatuur voor rechts"
+      },
+      "tire_temp_rl": {
+        "name": "Bandentemperatuur achter links"
+      },
+      "tire_temp_rr": {
+        "name": "Bandentemperatuur achter rechts"
+      },
+      "odometer": {
+        "name": "Kilometerteller"
+      },
+      "distance_to_service": {
+        "name": "Afstand tot onderhoud"
+      },
+      "days_to_service": {
+        "name": "Dagen tot onderhoud"
+      },
+      "interior_temp": {
+        "name": "Binnentemperatuur"
+      },
+      "charging_time_remaining": {
+        "name": "Resterende laadtijd"
+      }
+    },
+    "binary_sensor": {
+      "ac_active": {
+        "name": "Airconditioning"
+      },
+      "charging_cable": {
+        "name": "Laadkabel"
+      },
+      "charging": {
+        "name": "Bezig met laden"
+      },
+      "frunk": {
+        "name": "Frunk"
+      },
+      "trunk": {
+        "name": "Kofferbak"
+      },
+      "trunk_lock": {
+        "name": "Kofferbakslot"
+      },
+      "driver_door": {
+        "name": "Bestuurdersdeur"
+      },
+      "passenger_door": {
+        "name": "Passagiersdeur"
+      },
+      "rear_driver_door": {
+        "name": "Achterste bestuurdersdeur"
+      },
+      "rear_passenger_door": {
+        "name": "Achterste passagiersdeur"
+      },
+      "camping_mode": {
+        "name": "Kampeerstand"
+      },
+      "car_wash_mode": {
+        "name": "Autowasstand"
+      },
+      "washer_fluid": {
+        "name": "Ruitensproeiervloeistof"
+      }
+    },
+    "switch": {
+      "travel_plan": {
+        "name": "Reisplan"
+      },
+      "cabin_comfort": {
+        "name": "Cabine voorconditionering"
+      },
+      "battery_warmup": {
+        "name": "Batterij conditionering"
+      },
+      "cycle": {
+        "name": "Gedetailleerd reisplan"
+      },
+      "ac": {
+        "name": "Airconditioning"
+      },
+      "charge_plan": {
+        "name": "Laadplan"
+      },
+      "sentry_mode": {
+        "name": "Schildwachtstand"
+      },
+      "steering_wheel_heating": {
+        "name": "Stuurverwarming"
+      },
+      "defrost": {
+        "name": "Ontdooien"
+      },
+      "monday": {
+        "name": "Maandag actief"
+      },
+      "tuesday": {
+        "name": "Dinsdag actief"
+      },
+      "wednesday": {
+        "name": "Woensdag actief"
+      },
+      "thursday": {
+        "name": "Donderdag actief"
+      },
+      "friday": {
+        "name": "Vrijdag actief"
+      },
+      "saturday": {
+        "name": "Zaterdag actief"
+      },
+      "sunday": {
+        "name": "Zondag actief"
+      }
+    },
+    "button": {
+      "refresh_data": {
+        "name": "Gegevens vernieuwen"
+      },
+      "open_trunk": {
+        "name": "Kofferbak openen"
+      },
+      "update_travel_plan": {
+        "name": "Reisplan bijwerken"
+      }
+    },
+    "climate": {
+      "thermostat": {
+        "name": "Klimaatregeling",
+        "state_attributes": {
+          "preset_mode": {
+            "state": {
+              "standard": "Standaard",
+              "quick_heat": "Snel verwarmen",
+              "quick_cool": "Snel koelen"
+            }
+          }
+        }
+      }
+    },
+    "lock": {
+      "door_lock": {
+        "name": "Deurslot"
+      }
+    },
+    "cover": {
+      "sunshade": {
+        "name": "Zonnescherm"
+      }
+    },
+    "number": {
+      "charge_limit": {
+        "name": "Laadlimiet"
+      }
+    },
+    "device_tracker": {
+      "location": {
+        "name": "Locatie"
+      }
+    },
+    "time": {
+      "charge_start_time": {
+        "name": "Laadstarttijd"
+      },
+      "charge_end_time": {
+        "name": "Laadeindtijd"
+      },
+      "travel_time": {
+        "name": "Reistijd"
+      }
+    }
+  }
+}
