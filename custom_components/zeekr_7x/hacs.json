@@ -1,0 +1,19 @@
+{
+  "name": "Zeekr API",
+  "country": [
+    "SE",
+    "NL",
+    "NO",
+    "DK",
+    "FI",
+    "DE",
+    "FR",
+    "ES",
+    "IT",
+    "AT",
+    "BE",
+    "CH"
+  ],
+  "render_readme": true,
+  "homeassistant": "2024.1.0"
+}
