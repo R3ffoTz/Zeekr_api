@@ -1,4 +1,4 @@
-DOMAIN = "zeekr_7x"
+DOMAIN = "zeekr_api"
 CONF_NAME = "name"
 PLATFORMS = ["sensor", "binary_sensor", "switch", "button", "climate", "cover", "number", "lock", "device_tracker", "time"]
 
