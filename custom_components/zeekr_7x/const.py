@@ -4,6 +4,7 @@ PLATFORMS = ["sensor", "binary_sensor", "switch", "button", "climate", "cover", 
 
 # API Endpoints
 URL_BASE = "https://eu-snc-tsp-api-gw.zeekrlife.com"
+URL_LOGIN = f"{URL_BASE}/ms-user-auth/v1.0/auth/login"
 URL_CONTROL = f"{URL_BASE}/ms-remote-control/v1.0/remoteControl/control"
 URL_STATUS = f"{URL_BASE}/ms-vehicle-status/api/v1.0/vehicle/status/latest?latest=false&target=new"
 URL_SENTRY = f"{URL_BASE}/ms-app-bff/api/v1.0/remoteControl/getVehicleState"
