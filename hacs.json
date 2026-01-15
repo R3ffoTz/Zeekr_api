@@ -1,6 +1,0 @@
-{
-  "name": "Zeekr_api",
-  "render_readme": true,
-  "domains": ["sensor", "binary_sensor", "device_tracker", "lock", "switch"],
-  "homeassistant": "2023.1.0"
-}
