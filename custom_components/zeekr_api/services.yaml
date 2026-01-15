@@ -1,0 +1,18 @@
+start_climate:
+  description: "Start the air conditioning"
+  fields:
+    temperature:
+      description: "Target temperature"
+      example: "20.0"
+    duration:
+      description: "Duration in minutes"
+      example: "15"
+
+stop_climate:
+  description: "Stop the air conditioning"
+
+unlock_doors:
+  description: "Unlock the doors"
+
+lock_doors:
+  description: "Lock the doors"
