@@ -16,6 +16,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ZeekrTravelUpdateButton(coordinator, prefix, entry.entry_id),
         ZeekrHoodButton(coordinator, prefix),
         ZeekrWindowVentilationButton(coordinator, prefix),
+        ZeekrWindowDownButton(coordinator, prefix),
+        ZeekrWindowUpButton(coordinator, prefix),
         ZeekrFlashLightsButton(coordinator, prefix),
         ZeekrHonkFlashButton(coordinator, prefix),
     ])
@@ -147,17 +149,81 @@ class ZeekrWindowVentilationButton(CoordinatorEntity, ButtonEntity):
     async def async_press(self):
         payload = {
             "command": "start",
-            "serviceId": "RWV",
+            "serviceId": "RWS",
             "setting": {
                 "serviceParameters": [
                     {
-                        "key": "mode",
+                        "key": "target",
                         "value": "ventilate"
                     }
                 ]
             }
         }
         await self.coordinator.send_command(URL_CONTROL, payload, "Raam ventilatie")
+
+
+class ZeekrWindowDownButton(CoordinatorEntity, ButtonEntity):
+    def __init__(self, coordinator, prefix):
+        super().__init__(coordinator)
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = "window_down"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_window_down"
+        self._attr_icon = "mdi:window-open"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    async def async_press(self):
+        payload = {
+            "command": "start",
+            "serviceId": "RWS",
+            "setting": {
+                "serviceParameters": [
+                    {
+                        "key": "target",
+                        "value": "window"
+                    }
+                ]
+            }
+        }
+        await self.coordinator.send_command(URL_CONTROL, payload, "Fönster helt ner")
+
+
+class ZeekrWindowUpButton(CoordinatorEntity, ButtonEntity):
+    def __init__(self, coordinator, prefix):
+        super().__init__(coordinator)
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = "window_up"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_window_up"
+        self._attr_icon = "mdi:window-closed"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    async def async_press(self):
+        payload = {
+            "command": "stop",
+            "serviceId": "RWS",
+            "setting": {
+                "serviceParameters": [
+                    {
+                        "key": "target",
+                        "value": "window"
+                    }
+                ]
+            }
+        }
+        await self.coordinator.send_command(URL_CONTROL, payload, "Stäng fönster")
 
 
 class ZeekrFlashLightsButton(CoordinatorEntity, ButtonEntity):
