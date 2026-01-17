@@ -204,9 +204,6 @@
       "sentry_mode": {
         "name": "Sentry mode"
       },
-      "steering_wheel_heating": {
-        "name": "Steering wheel heating"
-      },
       "defrost": {
         "name": "Defrost"
       },
@@ -250,6 +247,12 @@
       },
       "window_ventilation": {
         "name": "Window ventilation"
+      },
+      "window_down": {
+        "name": "Windows down"
+      },
+      "window_up": {
+        "name": "Windows up"
       },
       "flash_lights": {
         "name": "Flash lights"
