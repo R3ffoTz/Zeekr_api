@@ -125,8 +125,14 @@
       "interior_temp": {
         "name": "Inomhustemperatur"
       },
-      "outside_temp": {
-        "name": "Utomhustemperatur"
+      "trip_2_distance": {
+        "name": "Resa 2 sträcka"
+      },
+      "trip_2_avg_speed": {
+        "name": "Resa 2 medelhastighet"
+      },
+      "trip_2_avg_consumption": {
+        "name": "Resa 2 medelförbrukning"
       },
       "charging_time_remaining": {
         "name": "Återstående laddningstid"
