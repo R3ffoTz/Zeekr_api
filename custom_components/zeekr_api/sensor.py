@@ -38,16 +38,17 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ("tire_pressure_fr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusPassenger"], "bar", SensorDeviceClass.PRESSURE, None),
         ("tire_pressure_rl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusDriverRear"], "bar", SensorDeviceClass.PRESSURE, None),
         ("tire_pressure_rr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusPassengerRear"], "bar", SensorDeviceClass.PRESSURE, None),
-        ("tire_temp_fl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriver"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
-        ("tire_temp_fr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassenger"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
-        ("tire_temp_rl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriverRear"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
-        ("tire_temp_rr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassengerRear"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_fl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriver"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_fr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassenger"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_rl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriverRear"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_rr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassengerRear"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
         
         # --- Maintenance & Status ---
         ("odometer", ["main", "additionalVehicleStatus", "maintenanceStatus", "odometer"], "km", "mdi:counter", None),
         ("distance_to_service", ["main", "additionalVehicleStatus","maintenanceStatus", "distanceToService"], "km", SensorDeviceClass.DISTANCE, None),
         ("days_to_service", ["main", "additionalVehicleStatus","maintenanceStatus", "daysToService"], "d", None, None),
-        ("interior_temp", ["main", "additionalVehicleStatus", "climateStatus", "interiorTemp"], UnitOfTemperature.CELSIUS, SensorDeviceClass.TEMPERATURE, None),
+        ("interior_temp", ["main", "additionalVehicleStatus", "climateStatus", "interiorTemp"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
+        ("outside_temp", ["main", "additionalVehicleStatus", "climateStatus", "outsideTemp"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
     ]
     
     entities = [ZeekrSensor(coordinator, prefix, *s) for s in sensor_definitions]
