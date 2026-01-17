@@ -204,9 +204,6 @@
       "sentry_mode": {
         "name": "Schildwacht modus"
       },
-      "steering_wheel_heating": {
-        "name": "Stuurverwarming"
-      },
       "defrost": {
         "name": "Ontdooien"
       },
@@ -250,6 +247,12 @@
       },
       "window_ventilation": {
         "name": "Raamventilatie"
+      },
+      "window_down": {
+        "name": "Ramen naar beneden"
+      },
+      "window_up": {
+        "name": "Ramen omhoog"
       },
       "flash_lights": {
         "name": "Knipperlichten"
