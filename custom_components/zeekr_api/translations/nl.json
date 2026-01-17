@@ -2,33 +2,24 @@
   "config": {
     "step": {
       "user": {
-        "title": "Zeekr API instellen",
-        "description": "Voer uw Zeekr-voertuiginloggegevens in. Verkrijg deze waarden uit het netwerkverkeer van de Zeekr-app met Proxyman of een vergelijkbaar hulpmiddel.",
+        "title": "Zeekr 7X instellen",
+        "description": "Voer uw Zeekr-voertuiggegevens in",
         "data": {
           "name": "Voertuignaam",
-          "vin": "VIN (Voertuigidentificatienummer)",
-          "access_token": "Access Token (zonder 'Bearer' prefix)",
-          "refresh_token": "Refresh Token (optioneel - activeert automatische tokenvernieuwing)",
-          "identifier": "Identificatie (optioneel - vereist voor automatische tokenvernieuwing)"
-        },
-        "data_description": {
-          "access_token": "Het JWT access token van de Zeekr API (zonder 'Bearer' prefix)",
-          "refresh_token": "Het refresh token dat wordt gebruikt om het access token automatisch te vernieuwen",
-          "identifier": "De versleutelde identificatie die wordt gebruikt tijdens inloggen (vereist voor auto-refresh)"
+          "vin": "VIN (voertuigidentificatienummer)",
+          "access_token": "Toegangstoken"
         }
       },
       "reconfigure": {
-        "title": "Zeekr API opnieuw configureren",
-        "description": "Werk uw tokens bij. Laat velden leeg om huidige waarden te behouden.",
+        "title": "Zeekr 7X opnieuw configureren",
+        "description": "Werk uw toegangstoken bij",
         "data": {
-          "access_token": "Nieuw Access Token (optioneel)",
-          "refresh_token": "Nieuw Refresh Token (optioneel)",
-          "identifier": "Nieuwe Identificatie (optioneel)"
+          "access_token": "Toegangstoken"
         }
       }
     },
     "error": {
-      "cannot_connect": "Verbinding mislukt",
+      "cannot_connect": "Kan geen verbinding maken",
       "invalid_auth": "Ongeldige authenticatie",
       "unknown": "Onverwachte fout"
     },
@@ -54,9 +45,9 @@
       "charging_status": {
         "name": "Laadstatus",
         "state": {
-          "not_charging": "Laadt niet",
-          "charging": "Bezig met laden",
-          "connected": "Verbonden",
+          "not_charging": "Niet aan het laden",
+          "charging": "Aan het laden",
+          "connected": "Aangesloten",
           "charge_complete": "Laden voltooid"
         }
       },
@@ -90,37 +81,37 @@
         "name": "Motorstatus",
         "state": {
           "parked": "Geparkeerd",
-          "driving": "Rijdend",
-          "ready": "Gereed",
-          "charging": "Bezig met laden"
+          "driving": "Rijden",
+          "ready": "Klaar",
+          "charging": "Laden"
         }
       },
       "scheduled_charge_time": {
         "name": "Geplande laadtijd"
       },
       "tire_pressure_fl": {
-        "name": "Bandenspanning voor links"
+        "name": "Bandenspanning links voor"
       },
       "tire_pressure_fr": {
-        "name": "Bandenspanning voor rechts"
+        "name": "Bandenspanning rechts voor"
       },
       "tire_pressure_rl": {
-        "name": "Bandenspanning achter links"
+        "name": "Bandenspanning links achter"
       },
       "tire_pressure_rr": {
-        "name": "Bandenspanning achter rechts"
+        "name": "Bandenspanning rechts achter"
       },
       "tire_temp_fl": {
-        "name": "Bandentemperatuur voor links"
+        "name": "Bandentemperatuur links voor"
       },
       "tire_temp_fr": {
-        "name": "Bandentemperatuur voor rechts"
+        "name": "Bandentemperatuur rechts voor"
       },
       "tire_temp_rl": {
-        "name": "Bandentemperatuur achter links"
+        "name": "Bandentemperatuur links achter"
       },
       "tire_temp_rr": {
-        "name": "Bandentemperatuur achter rechts"
+        "name": "Bandentemperatuur rechts achter"
       },
       "odometer": {
         "name": "Kilometerteller"
@@ -134,6 +125,9 @@
       "interior_temp": {
         "name": "Binnentemperatuur"
       },
+      "outside_temp": {
+        "name": "Buitentemperatuur"
+      },
       "charging_time_remaining": {
         "name": "Resterende laadtijd"
       }
@@ -146,7 +140,7 @@
         "name": "Laadkabel"
       },
       "charging": {
-        "name": "Bezig met laden"
+        "name": "Laden"
       },
       "frunk": {
         "name": "Frunk"
@@ -164,19 +158,22 @@
         "name": "Passagiersdeur"
       },
       "rear_driver_door": {
-        "name": "Achterste bestuurdersdeur"
+        "name": "Achter bestuurdersdeur"
       },
       "rear_passenger_door": {
-        "name": "Achterste passagiersdeur"
+        "name": "Achter passagiersdeur"
       },
       "camping_mode": {
         "name": "Kampeerstand"
       },
       "car_wash_mode": {
-        "name": "Autowasstand"
+        "name": "Wasstraat modus"
       },
       "washer_fluid": {
         "name": "Ruitensproeiervloeistof"
+      },
+      "living_detection": {
+        "name": "Levend wezen detectie"
       }
     },
     "switch": {
@@ -184,7 +181,7 @@
         "name": "Reisplan"
       },
       "cabin_comfort": {
-        "name": "Cabine voorconditionering"
+        "name": "Cabine voorklimatisering"
       },
       "battery_warmup": {
         "name": "Batterij conditionering"
@@ -199,7 +196,7 @@
         "name": "Laadplan"
       },
       "sentry_mode": {
-        "name": "Schildwachtstand"
+        "name": "Schildwacht modus"
       },
       "steering_wheel_heating": {
         "name": "Stuurverwarming"
@@ -227,6 +224,9 @@
       },
       "sunday": {
         "name": "Zondag actief"
+      },
+      "parking_comfort": {
+        "name": "Parkeercomfort modus"
       }
     },
     "button": {
@@ -236,8 +236,20 @@
       "open_trunk": {
         "name": "Kofferbak openen"
       },
+      "open_hood": {
+        "name": "Motorkap openen"
+      },
       "update_travel_plan": {
         "name": "Reisplan bijwerken"
+      },
+      "window_ventilation": {
+        "name": "Raamventilatie"
+      },
+      "flash_lights": {
+        "name": "Knipperlichten"
+      },
+      "honk_and_flash": {
+        "name": "Toeter en knipperlicht"
       }
     },
     "climate": {
@@ -267,6 +279,27 @@
     "number": {
       "charge_limit": {
         "name": "Laadlimiet"
+      },
+      "seat_heating_driver": {
+        "name": "Stoelverwarming bestuurder"
+      },
+      "seat_heating_passenger": {
+        "name": "Stoelverwarming passagier"
+      },
+      "seat_heating_rear_left": {
+        "name": "Stoelverwarming achter links"
+      },
+      "seat_heating_rear_right": {
+        "name": "Stoelverwarming achter rechts"
+      },
+      "seat_ventilation_driver": {
+        "name": "Stoelventilatie bestuurder"
+      },
+      "seat_ventilation_passenger": {
+        "name": "Stoelventilatie passagier"
+      },
+      "steering_wheel_heating_level": {
+        "name": "Stuurverwarming niveau"
       }
     },
     "device_tracker": {
@@ -276,10 +309,10 @@
     },
     "time": {
       "charge_start_time": {
-        "name": "Laadstarttijd"
+        "name": "Laadstart tijd"
       },
       "charge_end_time": {
-        "name": "Laadeindtijd"
+        "name": "Laadeind tijd"
       },
       "travel_time": {
         "name": "Reistijd"
