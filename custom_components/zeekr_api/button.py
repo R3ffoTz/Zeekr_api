@@ -13,7 +13,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
     async_add_entities([
         ZeekrRefreshButton(coordinator, prefix),
         ZeekrTrunkButton(coordinator, prefix),
-        ZeekrTravelUpdateButton(coordinator, prefix, entry.entry_id)
+        ZeekrTravelUpdateButton(coordinator, prefix, entry.entry_id),
+        ZeekrHoodButton(coordinator, prefix),
+        ZeekrWindowVentilationButton(coordinator, prefix),
+        ZeekrFlashLightsButton(coordinator, prefix),
+        ZeekrHonkFlashButton(coordinator, prefix),
     ])
 
 class ZeekrTravelUpdateButton(ButtonEntity):
@@ -90,3 +94,131 @@ class ZeekrTrunkButton(CoordinatorEntity, ButtonEntity):
         }
 
         await self.coordinator.send_command(URL_CONTROL, payload, "Achterklep openen")
+
+
+class ZeekrHoodButton(CoordinatorEntity, ButtonEntity):
+    def __init__(self, coordinator, prefix):
+        super().__init__(coordinator)
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = "open_hood"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_hood_button"
+        self._attr_icon = "mdi:car-front"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    async def async_press(self):
+        payload = {
+            "command": "start",
+            "serviceId": "RDU",
+            "setting": {
+                "serviceParameters": [
+                    {
+                        "key": "target",
+                        "value": "hood"
+                    }
+                ]
+            }
+        }
+        await self.coordinator.send_command(URL_CONTROL, payload, "Motorhuv openen")
+
+
+class ZeekrWindowVentilationButton(CoordinatorEntity, ButtonEntity):
+    def __init__(self, coordinator, prefix):
+        super().__init__(coordinator)
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = "window_ventilation"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_window_ventilation"
+        self._attr_icon = "mdi:window-open-variant"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    async def async_press(self):
+        payload = {
+            "command": "start",
+            "serviceId": "RWV",
+            "setting": {
+                "serviceParameters": [
+                    {
+                        "key": "mode",
+                        "value": "ventilate"
+                    }
+                ]
+            }
+        }
+        await self.coordinator.send_command(URL_CONTROL, payload, "Raam ventilatie")
+
+
+class ZeekrFlashLightsButton(CoordinatorEntity, ButtonEntity):
+    def __init__(self, coordinator, prefix):
+        super().__init__(coordinator)
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = "flash_lights"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_flash_lights"
+        self._attr_icon = "mdi:car-light-alert"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    async def async_press(self):
+        payload = {
+            "command": "start",
+            "serviceId": "RHF",
+            "setting": {
+                "serviceParameters": [
+                    {
+                        "key": "honk_flash_param",
+                        "value": "flash"
+                    }
+                ]
+            }
+        }
+        await self.coordinator.send_command(URL_CONTROL, payload, "Knipperlichten")
+
+
+class ZeekrHonkFlashButton(CoordinatorEntity, ButtonEntity):
+    def __init__(self, coordinator, prefix):
+        super().__init__(coordinator)
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = "honk_and_flash"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_honk_and_flash"
+        self._attr_icon = "mdi:bullhorn"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    async def async_press(self):
+        payload = {
+            "command": "start",
+            "serviceId": "RHF",
+            "setting": {
+                "serviceParameters": [
+                    {
+                        "key": "honk_flash_param",
+                        "value": "honk_flash"
+                    }
+                ]
+            }
+        }
+        await self.coordinator.send_command(URL_CONTROL, payload, "Toeter en knipperlicht")
