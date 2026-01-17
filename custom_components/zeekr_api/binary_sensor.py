@@ -25,6 +25,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ZeekrBinary(coordinator, p, "camping_mode", None, ["sentry", "campingModeState"], icon="mdi:tent"),
         ZeekrBinary(coordinator, p, "car_wash_mode", None, ["sentry", "washCarModeState"], icon="mdi:car-wash"),
         ZeekrBinary(coordinator, p, "washer_fluid", BinarySensorDeviceClass.PROBLEM, ["main", "maintenanceStatus", "washerFluidLevelStatus"], invert=True),
+        ZeekrBinary(coordinator, p, "living_detection", BinarySensorDeviceClass.OCCUPANCY, ["sentry", "livingDetectionState"], icon="mdi:account-alert"),
     ]
     async_add_entities(entities)
 
