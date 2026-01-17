@@ -4,8 +4,6 @@ A comprehensive Home Assistant integration for Zeekr vehicles with automatic tok
 
 ## Features
 
-✨ **Automatic Token Renewal** - Set it and forget it! The integration automatically renews your access token in the background.
-
 🚗 **Comprehensive Vehicle Control**
 - Climate control with multiple preset modes
 - Door locks and trunk control
