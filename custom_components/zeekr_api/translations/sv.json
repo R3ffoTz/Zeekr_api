@@ -2,33 +2,24 @@
   "config": {
     "step": {
       "user": {
-        "title": "Konfigurera Zeekr API",
-        "description": "Ange dina Zeekr-fordonsinloggningsuppgifter. Hämta dessa värden från Zeekr-appens nätverkstrafik med Proxyman eller liknande verktyg.",
+        "title": "Konfigurera Zeekr 7X",
+        "description": "Ange dina Zeekr-fordonsuppgifter",
         "data": {
           "name": "Fordonsnamn",
-          "vin": "VIN (Chassinummer)",
-          "access_token": "Access Token (utan 'Bearer' prefix)",
-          "refresh_token": "Refresh Token (valfritt - aktiverar automatisk tokenförnyelse)",
-          "identifier": "Identifierare (valfritt - krävs för automatisk tokenförnyelse)"
-        },
-        "data_description": {
-          "access_token": "JWT access token från Zeekr API (utan 'Bearer' prefix)",
-          "refresh_token": "Refresh token som används för att automatiskt förnya access token",
-          "identifier": "Den krypterade identifieraren som används vid inloggning (krävs för auto-refresh)"
+          "vin": "VIN (fordonets identifieringsnummer)",
+          "access_token": "Åtkomsttoken"
         }
       },
       "reconfigure": {
-        "title": "Konfigurera om Zeekr API",
-        "description": "Uppdatera dina tokens. Lämna fält tomma för att behålla nuvarande värden.",
+        "title": "Konfigurera om Zeekr 7X",
+        "description": "Uppdatera din åtkomsttoken",
         "data": {
-          "access_token": "Ny Access Token (valfritt)",
-          "refresh_token": "Ny Refresh Token (valfritt)",
-          "identifier": "Ny Identifierare (valfritt)"
+          "access_token": "Åtkomsttoken"
         }
       }
     },
     "error": {
-      "cannot_connect": "Kunde inte ansluta",
+      "cannot_connect": "Misslyckades att ansluta",
       "invalid_auth": "Ogiltig autentisering",
       "unknown": "Oväntat fel"
     },
@@ -40,13 +31,13 @@
   "entity": {
     "sensor": {
       "software_version": {
-        "name": "Programvaruversion"
+        "name": "Mjukvaruversion"
       },
       "license_plate": {
-        "name": "Registreringsnummer"
+        "name": "Registreringsskylt"
       },
       "vin": {
-        "name": "Chassinummer"
+        "name": "VIN"
       },
       "battery_percentage": {
         "name": "Batteri"
@@ -78,7 +69,7 @@
       "vehicle_status": {
         "name": "Fordonsstatus",
         "state": {
-          "deep_sleep": "Djup sömn",
+          "deep_sleep": "Djupsömn",
           "parked": "Parkerad",
           "unlocked": "Olåst",
           "system_active": "System aktivt",
@@ -134,6 +125,9 @@
       "interior_temp": {
         "name": "Inomhustemperatur"
       },
+      "outside_temp": {
+        "name": "Utomhustemperatur"
+      },
       "charging_time_remaining": {
         "name": "Återstående laddningstid"
       }
@@ -173,10 +167,13 @@
         "name": "Campingläge"
       },
       "car_wash_mode": {
-        "name": "Biltvätt-läge"
+        "name": "Biltvättsläge"
       },
       "washer_fluid": {
         "name": "Spolarvätska"
+      },
+      "living_detection": {
+        "name": "Levande detektion"
       }
     },
     "switch": {
@@ -227,6 +224,9 @@
       },
       "sunday": {
         "name": "Söndag aktiv"
+      },
+      "parking_comfort": {
+        "name": "Parkeringskomfort"
       }
     },
     "button": {
@@ -236,8 +236,20 @@
       "open_trunk": {
         "name": "Öppna bagagelucka"
       },
+      "open_hood": {
+        "name": "Öppna motorhuv"
+      },
       "update_travel_plan": {
         "name": "Uppdatera reseplan"
+      },
+      "window_ventilation": {
+        "name": "Fönsterventilation"
+      },
+      "flash_lights": {
+        "name": "Blinka lampor"
+      },
+      "honk_and_flash": {
+        "name": "Tuta och blinka"
       }
     },
     "climate": {
@@ -267,19 +279,40 @@
     "number": {
       "charge_limit": {
         "name": "Laddningsgräns"
+      },
+      "seat_heating_driver": {
+        "name": "Förarstolsvärme"
+      },
+      "seat_heating_passenger": {
+        "name": "Passagerarstolsvärme"
+      },
+      "seat_heating_rear_left": {
+        "name": "Baksäte vänster värme"
+      },
+      "seat_heating_rear_right": {
+        "name": "Baksäte höger värme"
+      },
+      "seat_ventilation_driver": {
+        "name": "Förarstolsventilation"
+      },
+      "seat_ventilation_passenger": {
+        "name": "Passagerarstolsventilation"
+      },
+      "steering_wheel_heating_level": {
+        "name": "Rattvärmesnivå"
       }
     },
     "device_tracker": {
       "location": {
-        "name": "Plats"
+        "name": "Position"
       }
     },
     "time": {
       "charge_start_time": {
-        "name": "Laddning starttid"
+        "name": "Laddstart tid"
       },
       "charge_end_time": {
-        "name": "Laddning sluttid"
+        "name": "Laddslut tid"
       },
       "travel_time": {
         "name": "Resetid"
