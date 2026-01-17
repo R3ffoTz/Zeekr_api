@@ -7,7 +7,7 @@ import hashlib
 import base64
 from urllib.parse import urlparse, parse_qs
 import uuid
-import time
+import time as time_module
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -16,12 +16,12 @@ from .const import DOMAIN, PLATFORMS, URL_STATUS, URL_SENTRY, URL_TRAVEL, URL_LI
 _LOGGER = logging.getLogger(__name__)
 
 # ============================================================================
-# 🔐 APP SECRET - SÄTT DIN SECRET HÄR NÄR DU HITTAR DEN!
+# APP SECRET - SET YOUR SECRET HERE WHEN YOU FIND IT!
 # ============================================================================
-# När du får tag på app_secret från Frida eller annan metod, ersätt denna rad:
-APP_SECRET = "YOUR_APP_SECRET_HERE"  # <-- ÄNDRA DENNA!
+# When you obtain app_secret from Frida or another method, replace this line:
+APP_SECRET = "YOUR_APP_SECRET_HERE"  # <-- CHANGE THIS!
 
-# Om du hittar secret:n, ändra till exempel:
+# If you find the secret, change to for example:
 # APP_SECRET = "JDEkMCQ1ZWVlNjUxYWJjNDI3MTU1MjE5OTZhNzlmYjQyNzRjZjQwZGQ4ODM0NDNjMzkxZjU2Yzk5OGY1ZmZkOTZiNmY0"
 # ============================================================================
 
@@ -125,7 +125,7 @@ class ZeekrCoordinator(DataUpdateCoordinator):
         """
         Generate all required headers including signature for API v2.0
         """
-        timestamp = str(int(time.time() * 1000))
+        timestamp = str(int(time_module.time() * 1000))
         nonce = str(uuid.uuid4())
         
         # Base headers needed for signature calculation
@@ -151,14 +151,14 @@ class ZeekrCoordinator(DataUpdateCoordinator):
         }
 
     async def _get_valid_token(self):
-        """Haal het token op."""
+        """Get the token."""
         token = self.entry.data.get("access_token")
         if not token: 
             return ""
         return f"Bearer {token}" if not token.startswith("Bearer ") else token
 
     async def _async_update_data(self):
-        """Haal alle data op van de verschillende Zeekr endpoints."""
+        """Fetch all data from the different Zeekr endpoints."""
         token = await self._get_valid_token()
         vin = self.entry.data.get('vin')
         
@@ -215,17 +215,17 @@ class ZeekrCoordinator(DataUpdateCoordinator):
                     else:
                         raw_results.append({})
 
-                # Helper functie om veilig 'data' op te halen
+                # Helper function to safely 'data' retrieve
                 def get_data(res):
                     if isinstance(res, dict):
                         return res.get("data", res)
                     return res
 
-                # Mappen van resultaten
+                # Mapping of results
                 status_data = get_data(raw_results[0])
                 list_res = raw_results[6]
 
-                # Voertuig info zoeken
+                # Search for vehicle info
                 vehicle_info = {}
                 search_list = []
                 if isinstance(list_res, dict):
@@ -237,13 +237,13 @@ class ZeekrCoordinator(DataUpdateCoordinator):
                 elif isinstance(list_res, list):
                     search_list = list_res
 
-                # Zoek de juiste auto op basis van VIN
+                # Find the correct car based on VIN
                 for v in search_list:
                     if isinstance(v, dict) and v.get("vin") == vin:
                         vehicle_info = v
                         break
                 
-                # Als er geen match is op VIN, pak dan de eerste als fallback
+                # If no match on VIN, take the first as fallback
                 if not vehicle_info and search_list:
                     vehicle_info = search_list[0]
 
@@ -258,7 +258,7 @@ class ZeekrCoordinator(DataUpdateCoordinator):
                 }
 
         except Exception as err:
-            raise UpdateFailed(f"Fout bij ophalen data: {err}")
+            raise UpdateFailed(f"Error fetching data: {err}")
 
     async def send_command(self, url, payload, description=""):
         """Send command to Zeekr API with signature"""
@@ -294,11 +294,25 @@ class ZeekrCoordinator(DataUpdateCoordinator):
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.post(url, json=payload, headers=headers, timeout=10) as resp:
-                    if resp.status == 200: 
-                        _LOGGER.info(f"OK: {description}")
-                        await asyncio.sleep(5)
-                        await self.async_request_refresh()
+                    response_text = await resp.text()
+                    _LOGGER.warning(f"🔵 Response status: {resp.status}")
+                    _LOGGER.warning(f"🔵 Response body: {response_text[:500]}")
+                    
+                    if resp.status == 200:
+                        try:
+                            response_data = await resp.json()
+                            _LOGGER.info(f"OK: {description}")
+                            await asyncio.sleep(5)
+                            await self.async_request_refresh()
+                            return response_data  # Return response for session handling
+                        except:
+                            _LOGGER.info(f"OK: {description}")
+                            await asyncio.sleep(5)
+                            await self.async_request_refresh()
+                            return None
                     else: 
-                        _LOGGER.error(f"Fout {resp.status} bij {description}: {await resp.text()}")
+                        _LOGGER.error(f"Error {resp.status} bij {description}: {response_text}")
+                        return None
         except Exception as e:
-            _LOGGER.error(f"Fout bij {description}: {e}")
+            _LOGGER.error(f"Error with {description}: {e}")
+            return None
