@@ -34,9 +34,9 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ZeekrControlSwitch(coordinator, prefix, "sentry_mode", ["sentry", "vstdModeState"], "1", "mdi:shield-lock",
             {"command": "start", "serviceId": "RSM", "setting": {"serviceParameters": [{"key": "rsm", "value": "6"}]}},
             {"command": "stop", "serviceId": "RSM", "setting": {"serviceParameters": [{"key": "rsm", "value": "6"}]}}),
-        ZeekrControlSwitch(coordinator, prefix, "steering_wheel_heating", ["main", "additionalVehicleStatus", "climateStatus", "steerWhlHeatingSts"], "1", "mdi:steering", 
-            {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "SH.11", "value": "true"}, {"key": "SH.11.level", "value": "3"}, {"key": "SH.11.duration", "value": "8"}]}},
-            {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "SH.11", "value": "false"}]}}),
+        ZeekrControlSwitch(coordinator, prefix, "steering_wheel_heating", ["main", "additionalVehicleStatus", "climateStatus", "steerWhlHeatingSts"], "1", "mdi:steering",
+            {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "SW", "value": "true"}, {"key": "SW.duration", "value": "8"}, {"key": "SW.level", "value": "3"}]}},
+            {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "SW", "value": "false"}]}}),
         ZeekrControlSwitch(coordinator, prefix, "defrost", ["main", "additionalVehicleStatus", "climateStatus", "defrost"], "1", "mdi:car-defrost-front",
             {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "DF", "value": "true"}, {"key": "DF.duration", "value": "15"}]}},
             {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "DF", "value": "false"}]}}),
@@ -75,13 +75,15 @@ class ZeekrTravelPlanSwitch(CoordinatorEntity, SwitchEntity):
         
         if command == "stop":
             payload = {
-                "command": "stop",
-                "timerId": str(travel_data.get("timerId", "4")),
-                "bwl": str(travel_data.get("bwl", "1")),
                 "ac": travel_data.get("ac", "true"),
+                "btActive": False,
+                "btTempActive": False,
                 "bw": travel_data.get("bw", "0"),
+                "bwl": str(travel_data.get("bwl", "1")),
+                "command": "stop",
                 "scheduleList": travel_data.get("scheduleList", []),
-                "scheduledTime": str(travel_data.get("scheduledTime", ""))
+                "scheduledTime": str(travel_data.get("scheduledTime", "")),
+                "timerId": str(travel_data.get("timerId", "4"))
             }
         else:
             gen_time_state = self.hass.states.get(f"time.{prefix_slug}_travel_time")
@@ -97,10 +99,15 @@ class ZeekrTravelPlanSwitch(CoordinatorEntity, SwitchEntity):
                             "timerActivation": "1"
                         })
                 payload = {
-                    "command": "start", "timerId": "4", "bwl": "1",
                     "ac": "true" if self._ac_opt.is_on else "false",
+                    "btActive": False,
+                    "btTempActive": False,
                     "bw": "1" if self._bw_opt.is_on else "0",
-                    "scheduleList": schedule, "scheduledTime": ""
+                    "bwl": "1",
+                    "command": "start",
+                    "scheduleList": schedule,
+                    "scheduledTime": "",
+                    "timerId": "4"
                 }
             else:
                 now = datetime.datetime.now()
@@ -111,10 +118,15 @@ class ZeekrTravelPlanSwitch(CoordinatorEntity, SwitchEntity):
                 
                 timestamp_ms = str(int(time_module.mktime(target_dt.timetuple()) * 1000))
                 payload = {
-                    "command": "start", "timerId": "", "bwl": "1",
                     "ac": "true" if self._ac_opt.is_on else "false",
+                    "btActive": False,
+                    "btTempActive": False,
                     "bw": "1" if self._bw_opt.is_on else "0",
-                    "scheduleList": [], "scheduledTime": timestamp_ms 
+                    "bwl": "1",
+                    "command": "start",
+                    "scheduleList": [],
+                    "scheduledTime": timestamp_ms,
+                    "timerId": ""
                 }
 
         await self.coordinator.send_command(URL_SET_TRAVEL, payload, f"Travelplan {command}")
@@ -236,13 +248,34 @@ class ZeekrChargePlanSwitch(CoordinatorEntity, SwitchEntity):
         plan = self.coordinator.data.get("plan", {})
         start = plan.get("startTime") or "01:15"
         end = plan.get("endTime") or "06:45"
-        p = {"target": 2, "endTime": end, "timerId": "2", "startTime": start, "command": "start"}
+        
+        # Match exact format from Proxyman
+        p = {
+            "bcCycleActive": False,
+            "bcTempActive": False,
+            "command": "start",
+            "endTime": end,
+            "scheduledTime": "",
+            "startTime": start,
+            "target": "2",
+            "timerId": "2"
+        }
         await self.coordinator.send_command(URL_SET_CHARGE_PLAN, p, "Laadplan Aan")
         await asyncio.sleep(2)
         await self.coordinator.async_request_refresh()
         
     async def async_turn_off(self, **kwargs):
-        p = {"target": 2, "timerId": "2", "startTime": "01:15", "command": "stop"}
+        # Match exact format from Proxyman for stop
+        p = {
+            "bcCycleActive": False,
+            "bcTempActive": False,
+            "command": "stop",
+            "endTime": "06:45",
+            "scheduledTime": "",
+            "startTime": "01:15",
+            "target": "2",
+            "timerId": "2"
+        }
         await self.coordinator.send_command(URL_SET_CHARGE_PLAN, p, "Laadplan Uit")
         await asyncio.sleep(2)
         await self.coordinator.async_request_refresh()
