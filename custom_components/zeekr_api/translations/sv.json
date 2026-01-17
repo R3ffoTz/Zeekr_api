@@ -251,6 +251,12 @@
       "window_ventilation": {
         "name": "Fönsterventilation"
       },
+      "window_down": {
+        "name": "Fönster ner"
+      },
+      "window_up": {
+        "name": "Fönster upp"
+      },
       "flash_lights": {
         "name": "Blinka lampor"
       },
@@ -303,9 +309,6 @@
       },
       "seat_ventilation_passenger": {
         "name": "Passagerarstolsventilation"
-      },
-      "steering_wheel_heating_level": {
-        "name": "Rattvärmesnivå"
       }
     },
     "device_tracker": {
