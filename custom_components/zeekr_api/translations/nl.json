@@ -125,8 +125,14 @@
       "interior_temp": {
         "name": "Binnentemperatuur"
       },
-      "outside_temp": {
-        "name": "Buitentemperatuur"
+      "trip_2_distance": {
+        "name": "Rit 2 afstand"
+      },
+      "trip_2_avg_speed": {
+        "name": "Rit 2 gemiddelde snelheid"
+      },
+      "trip_2_avg_consumption": {
+        "name": "Rit 2 gemiddeld verbruik"
       },
       "charging_time_remaining": {
         "name": "Resterende laadtijd"
