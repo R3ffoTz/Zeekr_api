@@ -1,13 +1,29 @@
 import logging
 from homeassistant.components.number import NumberEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .const import DOMAIN, URL_CHARGE_CONTROL
+from .const import DOMAIN, URL_CHARGE_CONTROL, URL_CONTROL
 
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([ZeekrChargeLimit(coordinator, entry)])
+    prefix = coordinator.entry.data.get('name', 'Zeekr 7X')
+    
+    entities = [
+        ZeekrChargeLimit(coordinator, entry),
+        # Seat Heating
+        ZeekrSeatHeating(coordinator, prefix, "driver", "main_driver_seat", "seat_heating_driver"),
+        ZeekrSeatHeating(coordinator, prefix, "passenger", "copilot_seat", "seat_heating_passenger"),
+        ZeekrSeatHeating(coordinator, prefix, "rear_left", "second_row_left", "seat_heating_rear_left"),
+        ZeekrSeatHeating(coordinator, prefix, "rear_right", "second_row_right", "seat_heating_rear_right"),
+        # Seat Ventilation
+        ZeekrSeatVentilation(coordinator, prefix, "driver", "main_driver_seat", "seat_ventilation_driver"),
+        ZeekrSeatVentilation(coordinator, prefix, "passenger", "copilot_seat", "seat_ventilation_passenger"),
+        # Steering Wheel Heating Level
+        ZeekrSteeringWheelHeating(coordinator, prefix),
+    ]
+    
+    async_add_entities(entities)
 
 class ZeekrChargeLimit(CoordinatorEntity, NumberEntity):
     def __init__(self, coordinator, entry):
@@ -81,3 +97,188 @@ class ZeekrChargeLimit(CoordinatorEntity, NumberEntity):
         )
         
         self.async_write_ha_state()
+
+
+class ZeekrSeatHeating(CoordinatorEntity, NumberEntity):
+    def __init__(self, coordinator, prefix, position_name, api_position, translation_key):
+        super().__init__(coordinator)
+        self.api_position = api_position
+        self.position_name = position_name
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = translation_key
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_{translation_key}"
+        self._attr_native_min_value = 0
+        self._attr_native_max_value = 3
+        self._attr_native_step = 1
+        self._attr_icon = "mdi:car-seat-heater"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    @property
+    def native_value(self):
+        # TODO: Read actual level from API when available
+        return 0
+
+    async def async_set_native_value(self, value):
+        level = int(value)
+        
+        if level == 0:
+            # Turn off
+            payload = {
+                "command": "start",
+                "serviceId": "ZAF",
+                "setting": {
+                    "serviceParameters": [
+                        {"key": "control_device", "value": "seat_heating"},
+                        {"key": "new_seat_heating_position", "value": self.api_position},
+                        {"key": "seat_heating_level", "value": "0"}
+                    ]
+                }
+            }
+        else:
+            # Set level
+            payload = {
+                "command": "start",
+                "serviceId": "ZAF",
+                "setting": {
+                    "serviceParameters": [
+                        {"key": "control_device", "value": "seat_heating"},
+                        {"key": "new_seat_heating_position", "value": self.api_position},
+                        {"key": "seat_heating_level", "value": str(level)}
+                    ]
+                }
+            }
+        
+        await self.coordinator.send_command(
+            URL_CONTROL, 
+            payload, 
+            f"Stoelverwarming {self.position_name} niveau {level}"
+        )
+
+
+class ZeekrSeatVentilation(CoordinatorEntity, NumberEntity):
+    def __init__(self, coordinator, prefix, position_name, api_position, translation_key):
+        super().__init__(coordinator)
+        self.api_position = api_position
+        self.position_name = position_name
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = translation_key
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_{translation_key}"
+        self._attr_native_min_value = 0
+        self._attr_native_max_value = 3
+        self._attr_native_step = 1
+        self._attr_icon = "mdi:car-seat-cooler"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    @property
+    def native_value(self):
+        # TODO: Read actual level from API when available
+        return 0
+
+    async def async_set_native_value(self, value):
+        level = int(value)
+        
+        if level == 0:
+            payload = {
+                "command": "start",
+                "serviceId": "ZAF",
+                "setting": {
+                    "serviceParameters": [
+                        {"key": "control_device", "value": "seat_ventilation"},
+                        {"key": "new_seat_ventilation_position", "value": self.api_position},
+                        {"key": "seat_ventilation_level", "value": "0"}
+                    ]
+                }
+            }
+        else:
+            payload = {
+                "command": "start",
+                "serviceId": "ZAF",
+                "setting": {
+                    "serviceParameters": [
+                        {"key": "control_device", "value": "seat_ventilation"},
+                        {"key": "new_seat_ventilation_position", "value": self.api_position},
+                        {"key": "seat_ventilation_level", "value": str(level)}
+                    ]
+                }
+            }
+        
+        await self.coordinator.send_command(
+            URL_CONTROL, 
+            payload, 
+            f"Stoelventilatie {self.position_name} niveau {level}"
+        )
+
+
+class ZeekrSteeringWheelHeating(CoordinatorEntity, NumberEntity):
+    def __init__(self, coordinator, prefix):
+        super().__init__(coordinator)
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = "steering_wheel_heating_level"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_steering_heating_level"
+        self._attr_native_min_value = 0
+        self._attr_native_max_value = 3
+        self._attr_native_step = 1
+        self._attr_icon = "mdi:steering"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    @property
+    def native_value(self):
+        val = self.coordinator.data.get("main", {}).get("additionalVehicleStatus", {}).get("climateStatus", {}).get("steerWhlHeatingSts")
+        # TODO: Map actual status to level when API provides it
+        # For now, return 0 (off) or 3 (on at max level)
+        return 0 if str(val) != "1" else 3
+
+    async def async_set_native_value(self, value):
+        level = int(value)
+        
+        if level == 0:
+            # Turn off
+            payload = {
+                "command": "start",
+                "serviceId": "ZAF",
+                "setting": {
+                    "serviceParameters": [
+                        {"key": "SH.11", "value": "false"}
+                    ]
+                }
+            }
+        else:
+            # Set level
+            payload = {
+                "command": "start",
+                "serviceId": "ZAF",
+                "setting": {
+                    "serviceParameters": [
+                        {"key": "SH.11", "value": "true"},
+                        {"key": "SH.11.level", "value": str(level)},
+                        {"key": "SH.11.duration", "value": "8"}
+                    ]
+                }
+            }
+        
+        await self.coordinator.send_command(
+            URL_CONTROL, 
+            payload, 
+            f"Stuurverwarming niveau {level}"
+        )
