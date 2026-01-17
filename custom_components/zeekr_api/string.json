@@ -2,28 +2,19 @@
   "config": {
     "step": {
       "user": {
-        "title": "Set up Zeekr API",
-        "description": "Enter your Zeekr vehicle credentials. Get these values from the Zeekr app network traffic using Proxyman or similar tool.",
+        "title": "Set up Zeekr 7X",
+        "description": "Enter your Zeekr vehicle credentials",
         "data": {
           "name": "Vehicle Name",
           "vin": "VIN (Vehicle Identification Number)",
-          "access_token": "Access Token (without 'Bearer' prefix)",
-          "refresh_token": "Refresh Token (optional - enables automatic token renewal)",
-          "identifier": "Identifier (optional - required for automatic token renewal)"
-        },
-        "data_description": {
-          "access_token": "The JWT access token from the Zeekr API (without 'Bearer' prefix)",
-          "refresh_token": "The refresh token used to automatically renew the access token",
-          "identifier": "The encrypted identifier used during login (required for auto-refresh)"
+          "access_token": "Access Token"
         }
       },
       "reconfigure": {
-        "title": "Reconfigure Zeekr API",
-        "description": "Update your tokens. Leave fields empty to keep current values.",
+        "title": "Reconfigure Zeekr 7X",
+        "description": "Update your access token",
         "data": {
-          "access_token": "New Access Token (optional)",
-          "refresh_token": "New Refresh Token (optional)",
-          "identifier": "New Identifier (optional)"
+          "access_token": "Access Token"
         }
       }
     },
@@ -134,6 +125,15 @@
       "interior_temp": {
         "name": "Interior temperature"
       },
+      "trip_2_distance": {
+        "name": "Trip 2 distance"
+      },
+      "trip_2_avg_speed": {
+        "name": "Trip 2 average speed"
+      },
+      "trip_2_avg_consumption": {
+        "name": "Trip 2 average consumption"
+      },
       "charging_time_remaining": {
         "name": "Charging time remaining"
       }
@@ -177,6 +177,9 @@
       },
       "washer_fluid": {
         "name": "Washer fluid"
+      },
+      "living_detection": {
+        "name": "Living detection"
       }
     },
     "switch": {
@@ -227,6 +230,9 @@
       },
       "sunday": {
         "name": "Sunday active"
+      },
+      "parking_comfort": {
+        "name": "Parking comfort mode"
       }
     },
     "button": {
@@ -236,8 +242,20 @@
       "open_trunk": {
         "name": "Open trunk"
       },
+      "open_hood": {
+        "name": "Open hood"
+      },
       "update_travel_plan": {
         "name": "Update travel plan"
+      },
+      "window_ventilation": {
+        "name": "Window ventilation"
+      },
+      "flash_lights": {
+        "name": "Flash lights"
+      },
+      "honk_and_flash": {
+        "name": "Honk and flash"
       }
     },
     "climate": {
@@ -267,6 +285,27 @@
     "number": {
       "charge_limit": {
         "name": "Charge limit"
+      },
+      "seat_heating_driver": {
+        "name": "Driver seat heating"
+      },
+      "seat_heating_passenger": {
+        "name": "Passenger seat heating"
+      },
+      "seat_heating_rear_left": {
+        "name": "Rear left seat heating"
+      },
+      "seat_heating_rear_right": {
+        "name": "Rear right seat heating"
+      },
+      "seat_ventilation_driver": {
+        "name": "Driver seat ventilation"
+      },
+      "seat_ventilation_passenger": {
+        "name": "Passenger seat ventilation"
+      },
+      "steering_wheel_heating_level": {
+        "name": "Steering wheel heating level"
       }
     },
     "device_tracker": {
