@@ -48,7 +48,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ("distance_to_service", ["main", "additionalVehicleStatus","maintenanceStatus", "distanceToService"], "km", SensorDeviceClass.DISTANCE, None),
         ("days_to_service", ["main", "additionalVehicleStatus","maintenanceStatus", "daysToService"], "d", None, None),
         ("interior_temp", ["main", "additionalVehicleStatus", "climateStatus", "interiorTemp"], "°C", SensorDeviceClass.TEMPERATURE, None),
-        ("outside_temp", ["main", "additionalVehicleStatus", "climateStatus", "outsideTemp"], "°C", SensorDeviceClass.TEMPERATURE, None),
+        
+        # --- Trip Computer (Trip 2 Related) ---
+        ("trip_2_distance", ["main", "additionalVehicleStatus", "runningStatus", "tripMeter2"], "km", "mdi:map-marker-distance", None),
+        ("trip_2_avg_speed", ["main", "additionalVehicleStatus", "runningStatus", "avgSpeed"], "km/h", "mdi:speedometer", None),
+        ("trip_2_avg_consumption", ["main", "additionalVehicleStatus", "electricVehicleStatus", "averPowerConsumption"], "kWh/100km", "mdi:lightning-bolt", None),
     ]
     
     entities = [ZeekrSensor(coordinator, prefix, *s) for s in sensor_definitions]
