@@ -10,7 +10,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 class ZeekrSunshade(CoordinatorEntity, CoverEntity):
     _attr_device_class = CoverDeviceClass.SHADE
-    _attr_supported_features = CoverEntityFeature.OPEN | CoverEntityFeature.CLOSE
+    _attr_supported_features = (
+        CoverEntityFeature.OPEN | 
+        CoverEntityFeature.CLOSE | 
+        CoverEntityFeature.SET_POSITION
+    )
 
     def __init__(self, coordinator, prefix):
         super().__init__(coordinator)
@@ -60,5 +64,22 @@ class ZeekrSunshade(CoordinatorEntity, CoverEntity):
             }
         }
         await self.coordinator.send_command(URL_CONTROL, payload, "Zonnescherm Sluiten")
+        await asyncio.sleep(2)
+        await self.coordinator.async_request_refresh()
+
+    async def async_set_cover_position(self, **kwargs):
+        position = kwargs.get("position", 0)
+        
+        payload = {
+            "command": "start",
+            "serviceId": "RWS",
+            "setting": {
+                "serviceParameters": [
+                    {"key": "target", "value": "sunshade"},
+                    {"key": "curtain_open", "value": str(position)}
+                ]
+            }
+        }
+        await self.coordinator.send_command(URL_CONTROL, payload, f"Zonnescherm positie {position}%")
         await asyncio.sleep(2)
         await self.coordinator.async_request_refresh()
