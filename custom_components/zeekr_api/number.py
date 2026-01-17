@@ -16,11 +16,9 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ZeekrSeatHeating(coordinator, prefix, "passenger", "copilot_seat", "seat_heating_passenger"),
         ZeekrSeatHeating(coordinator, prefix, "rear_left", "second_row_left", "seat_heating_rear_left"),
         ZeekrSeatHeating(coordinator, prefix, "rear_right", "second_row_right", "seat_heating_rear_right"),
-        # Seat Ventilation
+        # Seat Ventilation (front seats only)
         ZeekrSeatVentilation(coordinator, prefix, "driver", "main_driver_seat", "seat_ventilation_driver"),
         ZeekrSeatVentilation(coordinator, prefix, "passenger", "copilot_seat", "seat_ventilation_passenger"),
-        # Steering Wheel Heating Level
-        ZeekrSteeringWheelHeating(coordinator, prefix),
     ]
     
     async_add_entities(entities)
@@ -128,6 +126,16 @@ class ZeekrSeatHeating(CoordinatorEntity, NumberEntity):
     async def async_set_native_value(self, value):
         level = int(value)
         
+        # Map position based on Proxyman discovery
+        position_map = {
+            "main_driver_seat": "11",      # Confirmed via Proxyman
+            "copilot_seat": "12",          # Confirmed via Proxyman  
+            "second_row_left": "21",       # Confirmed via Proxyman
+            "second_row_right": "29"       # Confirmed via Proxyman ⬅️ .29 not .22!
+        }
+        
+        seat_num = position_map.get(self.api_position, "11")
+        
         if level == 0:
             # Turn off
             payload = {
@@ -135,22 +143,20 @@ class ZeekrSeatHeating(CoordinatorEntity, NumberEntity):
                 "serviceId": "ZAF",
                 "setting": {
                     "serviceParameters": [
-                        {"key": "control_device", "value": "seat_heating"},
-                        {"key": "new_seat_heating_position", "value": self.api_position},
-                        {"key": "seat_heating_level", "value": "0"}
+                        {"key": f"SH.{seat_num}", "value": "false"}
                     ]
                 }
             }
         else:
-            # Set level
+            # Set level with duration (15 min like in app)
             payload = {
                 "command": "start",
                 "serviceId": "ZAF",
                 "setting": {
                     "serviceParameters": [
-                        {"key": "control_device", "value": "seat_heating"},
-                        {"key": "new_seat_heating_position", "value": self.api_position},
-                        {"key": "seat_heating_level", "value": str(level)}
+                        {"key": f"SH.{seat_num}", "value": "true"},
+                        {"key": f"SH.{seat_num}.level", "value": str(level)},
+                        {"key": f"SH.{seat_num}.duration", "value": "15"}
                     ]
                 }
             }
@@ -191,27 +197,35 @@ class ZeekrSeatVentilation(CoordinatorEntity, NumberEntity):
     async def async_set_native_value(self, value):
         level = int(value)
         
+        # Map position for front seats only (no rear ventilation)
+        position_map = {
+            "main_driver_seat": "11",
+            "copilot_seat": "12"
+        }
+        
+        seat_num = position_map.get(self.api_position, "11")
+        
         if level == 0:
+            # Turn off
             payload = {
                 "command": "start",
                 "serviceId": "ZAF",
                 "setting": {
                     "serviceParameters": [
-                        {"key": "control_device", "value": "seat_ventilation"},
-                        {"key": "new_seat_ventilation_position", "value": self.api_position},
-                        {"key": "seat_ventilation_level", "value": "0"}
+                        {"key": f"SV.{seat_num}", "value": "false"}
                     ]
                 }
             }
         else:
+            # Set level with duration (15 min like in app)
             payload = {
                 "command": "start",
                 "serviceId": "ZAF",
                 "setting": {
                     "serviceParameters": [
-                        {"key": "control_device", "value": "seat_ventilation"},
-                        {"key": "new_seat_ventilation_position", "value": self.api_position},
-                        {"key": "seat_ventilation_level", "value": str(level)}
+                        {"key": f"SV.{seat_num}", "value": "true"},
+                        {"key": f"SV.{seat_num}.level", "value": str(level)},
+                        {"key": f"SV.{seat_num}.duration", "value": "15"}
                     ]
                 }
             }
@@ -223,59 +237,6 @@ class ZeekrSeatVentilation(CoordinatorEntity, NumberEntity):
         )
 
 
-class ZeekrSteeringWheelHeating(CoordinatorEntity, NumberEntity):
-    def __init__(self, coordinator, prefix):
-        super().__init__(coordinator)
-        vin = coordinator.entry.data.get('vin')
-        
-        self._attr_translation_key = "steering_wheel_heating_level"
-        self._attr_has_entity_name = True
-        self._attr_unique_id = f"{coordinator.entry.entry_id}_steering_heating_level"
-        self._attr_native_min_value = 0
-        self._attr_native_max_value = 3
-        self._attr_native_step = 1
-        self._attr_icon = "mdi:steering"
-        
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, vin)},
-            "name": prefix,
-            "manufacturer": "Zeekr",
-        }
-
-    @property
-    def native_value(self):
-        val = self.coordinator.data.get("main", {}).get("additionalVehicleStatus", {}).get("climateStatus", {}).get("steerWhlHeatingSts")
-        # TODO: Map actual status to level when API provides it
-        # For now, return 0 (off) or 3 (on at max level)
-        return 0 if str(val) != "1" else 3
-
-    async def async_set_native_value(self, value):
-        level = int(value)
-        
-        if level == 0:
-            # Turn off
-            payload = {
-                "command": "start",
-                "serviceId": "ZAF",
-                "setting": {
-                    "serviceParameters": [
-                        {"key": "SH.11", "value": "false"}
-                    ]
-                }
-            }
-        else:
-            # Set level
-            payload = {
-                "command": "start",
-                "serviceId": "ZAF",
-                "setting": {
-                    "serviceParameters": [
-                        {"key": "SH.11", "value": "true"},
-                        {"key": "SH.11.level", "value": str(level)},
-                        {"key": "SH.11.duration", "value": "8"}
-                    ]
-                }
-            }
         
         await self.coordinator.send_command(
             URL_CONTROL, 
