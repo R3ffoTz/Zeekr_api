@@ -125,8 +125,14 @@
       "interior_temp": {
         "name": "Interior temperature"
       },
-      "outside_temp": {
-        "name": "Outside temperature"
+      "trip_2_distance": {
+        "name": "Trip 2 distance"
+      },
+      "trip_2_avg_speed": {
+        "name": "Trip 2 average speed"
+      },
+      "trip_2_avg_consumption": {
+        "name": "Trip 2 average consumption"
       },
       "charging_time_remaining": {
         "name": "Charging time remaining"
