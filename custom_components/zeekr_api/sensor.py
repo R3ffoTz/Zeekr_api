@@ -130,10 +130,10 @@ class ZeekrSensor(CoordinatorEntity, SensorEntity):
             }
             return status_map.get(str(val).strip(), val)
 
-        # D. Trip 2 Distance - convert meters to km
+        # D. Trip 2 Distance - convert hectometers (100m) to km
         if "trip_2_distance" in self._translation_key:
             try:
-                return round(float(val) / 1000, 1)  # meters to km with 1 decimal
+                return round(float(val) / 10, 1)  # hectometers to km with 1 decimal
             except (ValueError, TypeError): return val
 
         # E. Round kilometers
