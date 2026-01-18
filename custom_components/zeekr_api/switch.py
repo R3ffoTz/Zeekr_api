@@ -39,10 +39,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
             {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "SW", "value": "false"}]}}),
         ZeekrControlSwitch(coordinator, prefix, "defrost", ["main", "additionalVehicleStatus", "climateStatus", "defrost"], "1", "mdi:car-defrost-front",
             {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "DF", "value": "true"}, {"key": "DF.duration", "value": "15"}]}},
-            {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "DF", "value": "false"}]}}),
-        ZeekrControlSwitch(coordinator, prefix, "parking_comfort", ["sentry", "parkingComfortModeState"], "1", "mdi:car-seat",
-            {"command": "start", "serviceId": "PCM", "setting": {"serviceParameters": [{"key": "parking_comfortable", "value": "true"}]}},
-            {"command": "stop", "serviceId": "PCM", "setting": {"serviceParameters": [{"key": "parking_comfortable", "value": "false"}]}})
+            {"command": "start", "serviceId": "ZAF", "setting": {"serviceParameters": [{"key": "DF", "value": "false"}]}})
     ]
 
     entities.extend(day_switches)
