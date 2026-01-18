@@ -227,9 +227,6 @@
       },
       "sunday": {
         "name": "Zondag actief"
-      },
-      "parking_comfort": {
-        "name": "Parkeercomfort modus"
       }
     },
     "button": {
@@ -259,6 +256,9 @@
       },
       "honk_and_flash": {
         "name": "Toeter en knipperlicht"
+      },
+      "disable_parking_comfort": {
+        "name": "Parkeercomfort uitschakelen"
       }
     },
     "climate": {
