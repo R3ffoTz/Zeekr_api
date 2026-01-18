@@ -219,11 +219,6 @@ Currently supported languages:
 - Svenska (sv) 
 - Nederlands (nl)
 
-## Credits
-
-- Reverse engineered from the Zeekr mobile app API
-- Built with ❤️ for the Home Assistant community
-
 ## Disclaimer
 
 This integration is not officially supported by Zeekr. Use at your own risk. The authors are not responsible for any damage to your vehicle or account.
