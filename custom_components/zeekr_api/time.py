@@ -117,5 +117,18 @@ class ZeekrChargeTime(CoordinatorEntity, TimeEntity):
         plan = self.coordinator.data.get("plan", {})
         start = new_time if self.time_type == "start" else plan.get("startTime", "01:15")
         end = new_time if self.time_type == "end" else plan.get("endTime", "06:45")
-        payload = {"target": 2, "endTime": end, "timerId": "2", "startTime": start, "command": "start"}
-        await self.coordinator.send_command(URL_CHARGE_PLAN, payload, f"Laadplan gewijzigd")
+        
+        # Use correct endpoint and payload format from Proxyman
+        payload = {
+            "bcCycleActive": False,
+            "bcTempActive": False,
+            "command": "start",
+            "endTime": end,
+            "scheduledTime": "",
+            "startTime": start,
+            "target": "2",
+            "timerId": "2"
+        }
+        
+        from .const import URL_SET_CHARGE_PLAN
+        await self.coordinator.send_command(URL_SET_CHARGE_PLAN, payload, f"Charge plan time changed")
