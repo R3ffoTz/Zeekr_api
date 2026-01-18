@@ -227,9 +227,6 @@
       },
       "sunday": {
         "name": "Sunday active"
-      },
-      "parking_comfort": {
-        "name": "Parking comfort mode"
       }
     },
     "button": {
@@ -259,6 +256,9 @@
       },
       "honk_and_flash": {
         "name": "Honk and flash"
+      },
+      "disable_parking_comfort": {
+        "name": "Disable parking comfort"
       }
     },
     "climate": {
