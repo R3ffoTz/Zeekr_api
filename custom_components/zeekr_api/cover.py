@@ -12,8 +12,7 @@ class ZeekrSunshade(CoordinatorEntity, CoverEntity):
     _attr_device_class = CoverDeviceClass.SHADE
     _attr_supported_features = (
         CoverEntityFeature.OPEN | 
-        CoverEntityFeature.CLOSE | 
-        CoverEntityFeature.SET_POSITION
+        CoverEntityFeature.CLOSE
     )
 
     def __init__(self, coordinator, prefix):
@@ -35,10 +34,6 @@ class ZeekrSunshade(CoordinatorEntity, CoverEntity):
         val = self.coordinator.data.get("main", {}).get("additionalVehicleStatus", {}).get("climateStatus", {}).get("curtainOpenStatus")
         return val == 1
 
-    @property
-    def current_cover_position(self):
-        return self.coordinator.data.get("main", {}).get("additionalVehicleStatus", {}).get("climateStatus", {}).get("curtainPos")
-
     async def async_open_cover(self, **kwargs):
         payload = {
             "command": "start", 
@@ -49,7 +44,7 @@ class ZeekrSunshade(CoordinatorEntity, CoverEntity):
                 ]
             }
         }
-        await self.coordinator.send_command(URL_CONTROL, payload, "Zonnescherm Openen")
+        await self.coordinator.send_command(URL_CONTROL, payload, "Open sunshade")
         await asyncio.sleep(2)
         await self.coordinator.async_request_refresh()
 
@@ -63,23 +58,6 @@ class ZeekrSunshade(CoordinatorEntity, CoverEntity):
                 ]
             }
         }
-        await self.coordinator.send_command(URL_CONTROL, payload, "Zonnescherm Sluiten")
-        await asyncio.sleep(2)
-        await self.coordinator.async_request_refresh()
-
-    async def async_set_cover_position(self, **kwargs):
-        position = kwargs.get("position", 0)
-        
-        payload = {
-            "command": "start",
-            "serviceId": "RWS",
-            "setting": {
-                "serviceParameters": [
-                    {"key": "target", "value": "sunshade"},
-                    {"key": "curtain_open", "value": str(position)}
-                ]
-            }
-        }
-        await self.coordinator.send_command(URL_CONTROL, payload, f"Zonnescherm positie {position}%")
+        await self.coordinator.send_command(URL_CONTROL, payload, "Close sunshade")
         await asyncio.sleep(2)
         await self.coordinator.async_request_refresh()
