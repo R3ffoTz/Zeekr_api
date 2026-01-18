@@ -38,16 +38,16 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ("tire_pressure_fr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusPassenger"], "bar", SensorDeviceClass.PRESSURE, None),
         ("tire_pressure_rl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusDriverRear"], "bar", SensorDeviceClass.PRESSURE, None),
         ("tire_pressure_rr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreStatusPassengerRear"], "bar", SensorDeviceClass.PRESSURE, None),
-        ("tire_temp_fl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriver"], "°C", SensorDeviceClass.TEMPERATURE, None),
-        ("tire_temp_fr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassenger"], "°C", SensorDeviceClass.TEMPERATURE, None),
-        ("tire_temp_rl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriverRear"], "°C", SensorDeviceClass.TEMPERATURE, None),
-        ("tire_temp_rr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassengerRear"], "°C", SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_fl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriver"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_fr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassenger"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_rl", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempDriverRear"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
+        ("tire_temp_rr", ["main", "additionalVehicleStatus","maintenanceStatus", "tyreTempPassengerRear"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
         
         # --- Maintenance & Status ---
         ("odometer", ["main", "additionalVehicleStatus", "maintenanceStatus", "odometer"], "km", "mdi:counter", None),
         ("distance_to_service", ["main", "additionalVehicleStatus","maintenanceStatus", "distanceToService"], "km", SensorDeviceClass.DISTANCE, None),
         ("days_to_service", ["main", "additionalVehicleStatus","maintenanceStatus", "daysToService"], "d", None, None),
-        ("interior_temp", ["main", "additionalVehicleStatus", "climateStatus", "interiorTemp"], "°C", SensorDeviceClass.TEMPERATURE, None),
+        ("interior_temp", ["main", "additionalVehicleStatus", "climateStatus", "interiorTemp"], "Â°C", SensorDeviceClass.TEMPERATURE, None),
         
         # --- Trip Computer (Trip 2 Related) ---
         ("trip_2_distance", ["main", "additionalVehicleStatus", "runningStatus", "tripMeter2"], "km", "mdi:map-marker-distance", None),
@@ -130,7 +130,13 @@ class ZeekrSensor(CoordinatorEntity, SensorEntity):
             }
             return status_map.get(str(val).strip(), val)
 
-        # D. Round kilometers
+        # D. Trip 2 Distance - convert meters to km
+        if "trip_2_distance" in self._translation_key:
+            try:
+                return round(float(val) / 1000, 1)  # meters to km with 1 decimal
+            except (ValueError, TypeError): return val
+
+        # E. Round kilometers
         if self._attr_native_unit_of_measurement == "km":
             try:
                 return int(float(val))
