@@ -109,18 +109,6 @@ In the **Request headers**, you'll find:
    - **Vehicle Name**: A friendly name for your vehicle
    - **VIN**: Your vehicle identification number
    - **Access Token**: The JWT token (required)
-   - **Refresh Token**: For automatic renewal (recommended)
-   - **Identifier**: For automatic renewal (recommended)
-
-### Automatic Token Renewal
-
-If you provide both the **Refresh Token** and **Identifier**, the integration will:
-- ✅ Check token expiry every 24 hours before expiration
-- ✅ Automatically renew your access token in the background
-- ✅ Handle API authentication errors by refreshing the token
-- ✅ No manual intervention needed for ~30 days
-
-**Without Refresh Token**: You'll need to manually update your access token every ~7 days using the "Reconfigure" option.
 
 ## Usage Examples
 
