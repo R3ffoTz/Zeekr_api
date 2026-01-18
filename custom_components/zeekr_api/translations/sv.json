@@ -230,9 +230,6 @@
       },
       "sunday": {
         "name": "Söndag aktiv"
-      },
-      "parking_comfort": {
-        "name": "Parkeringskomfort"
       }
     },
     "button": {
@@ -262,6 +259,9 @@
       },
       "honk_and_flash": {
         "name": "Tuta och blinka"
+      },
+      "disable_parking_comfort": {
+        "name": "Inaktivera parkeringskomfort"
       }
     },
     "climate": {
