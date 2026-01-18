@@ -20,6 +20,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ZeekrWindowUpButton(coordinator, prefix),
         ZeekrFlashLightsButton(coordinator, prefix),
         ZeekrHonkFlashButton(coordinator, prefix),
+        ZeekrParkingComfortDisableButton(coordinator, prefix),
     ])
 
 class ZeekrTravelUpdateButton(ButtonEntity):
@@ -245,17 +246,17 @@ class ZeekrFlashLightsButton(CoordinatorEntity, ButtonEntity):
     async def async_press(self):
         payload = {
             "command": "start",
-            "serviceId": "RHF",
+            "serviceId": "RHL",
             "setting": {
                 "serviceParameters": [
                     {
-                        "key": "honk_flash_param",
-                        "value": "flash"
+                        "key": "rhl",
+                        "value": "light-flash"
                     }
                 ]
             }
         }
-        await self.coordinator.send_command(URL_CONTROL, payload, "Knipperlichten")
+        await self.coordinator.send_command(URL_CONTROL, payload, "Flash lights")
 
 
 class ZeekrHonkFlashButton(CoordinatorEntity, ButtonEntity):
@@ -277,14 +278,46 @@ class ZeekrHonkFlashButton(CoordinatorEntity, ButtonEntity):
     async def async_press(self):
         payload = {
             "command": "start",
-            "serviceId": "RHF",
+            "serviceId": "RHL",
             "setting": {
                 "serviceParameters": [
                     {
-                        "key": "honk_flash_param",
-                        "value": "honk_flash"
+                        "key": "rhl",
+                        "value": "horn-light-flash"
                     }
                 ]
             }
         }
-        await self.coordinator.send_command(URL_CONTROL, payload, "Toeter en knipperlicht")
+        await self.coordinator.send_command(URL_CONTROL, payload, "Honk and flash")
+
+
+class ZeekrParkingComfortDisableButton(CoordinatorEntity, ButtonEntity):
+    def __init__(self, coordinator, prefix):
+        super().__init__(coordinator)
+        vin = coordinator.entry.data.get('vin')
+        
+        self._attr_translation_key = "disable_parking_comfort"
+        self._attr_has_entity_name = True
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_disable_parking_comfort"
+        self._attr_icon = "mdi:car-seat-cooler"
+        
+        self._attr_device_info = {
+            "identifiers": {(DOMAIN, vin)},
+            "name": prefix,
+            "manufacturer": "Zeekr",
+        }
+
+    async def async_press(self):
+        payload = {
+            "command": "stop",
+            "serviceId": "PCM",
+            "setting": {
+                "serviceParameters": [
+                    {
+                        "key": "parking_comfortable",
+                        "value": "false"
+                    }
+                ]
+            }
+        }
+        await self.coordinator.send_command(URL_CONTROL, payload, "Disable parking comfort")
