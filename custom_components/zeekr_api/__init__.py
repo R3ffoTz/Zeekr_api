@@ -42,7 +42,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
 
 class ZeekrCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, entry):
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=timedelta(minutes=15))
+        super().__init__(hass, _LOGGER, name=DOMAIN, update_method=self._async_update_data, update_interval=timedelta(minutes=15))
         self.entry = entry
 
     def _generate_signature(self, method: str, url: str, headers: dict, body: str = "") -> str:
