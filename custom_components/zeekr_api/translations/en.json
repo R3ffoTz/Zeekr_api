@@ -6,7 +6,7 @@
         "description": "Enter your Zeekr vehicle credentials",
         "data": {
           "name": "Vehicle Name",
-          "vin": "VIN (Vehicle Identification Number)",
+          "vin": "X-VIN (Vehicle Identification Number encrypted)",
           "access_token": "Access Token"
         }
       },
