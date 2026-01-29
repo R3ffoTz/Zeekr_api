@@ -6,7 +6,7 @@
         "description": "Ange dina Zeekr-fordonsuppgifter",
         "data": {
           "name": "Fordonsnamn",
-          "vin": "VIN (fordonets identifieringsnummer)",
+          "vin": "X-VIN (fordonets krypterade identifieringsnummer)",
           "access_token": "Åtkomsttoken"
         }
       },
